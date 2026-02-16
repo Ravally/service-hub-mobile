@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: colors.trellio,
+    backgroundColor: colors.scaffld,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: spacing.sm,

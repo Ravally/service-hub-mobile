@@ -1,7 +1,10 @@
 import { create } from 'zustand';
 import { onSnapshot } from 'firebase/firestore';
 import { userCollection } from '../services/firestore';
-import { offlineUpdateUserDoc } from '../services/offlineFirestore';
+import {
+  offlineAddUserDoc,
+  offlineUpdateUserDoc,
+} from '../services/offlineFirestore';
 
 export const useJobsStore = create((set, get) => ({
   jobs: [],
@@ -68,6 +71,26 @@ export const useJobsStore = create((set, get) => ({
 
   // --- Mutations ---
 
+  createJob: async (userId, jobData) => {
+    const now = new Date().toISOString();
+    const data = {
+      status: 'Scheduled',
+      checklist: [],
+      formTemplates: [],
+      formResponses: [],
+      assignees: [],
+      laborEntries: [],
+      lineItems: [],
+      expenses: [],
+      jobType: 'one_off',
+      schedule: 'One-time',
+      ...jobData,
+      createdAt: now,
+      updatedAt: now,
+    };
+    return await offlineAddUserDoc(userId, 'jobs', data);
+  },
+
   updateJobStatus: async (userId, jobId, status) => {
     set((state) => ({
       jobs: state.jobs.map((j) =>
@@ -93,6 +116,21 @@ export const useJobsStore = create((set, get) => ({
       ),
     }));
     await offlineUpdateUserDoc(userId, 'jobs', jobId, { laborEntries });
+  },
+
+  addExpenseToJob: async (userId, jobId, expense) => {
+    const job = get().getJobById(jobId);
+    const existing = job?.expenses || [];
+    const id = `exp_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+    const newExpense = { ...expense, id };
+    const expenses = [...existing, newExpense];
+    set((state) => ({
+      jobs: state.jobs.map((j) =>
+        j.id === jobId ? { ...j, expenses, updatedAt: new Date().toISOString() } : j,
+      ),
+    }));
+    await offlineUpdateUserDoc(userId, 'jobs', jobId, { expenses });
+    return id;
   },
 
   addFormResponseToJob: async (userId, jobId, responseId) => {

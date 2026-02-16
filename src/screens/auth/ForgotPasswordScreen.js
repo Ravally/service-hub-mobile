@@ -108,13 +108,13 @@ const styles = StyleSheet.create({
     color: colors.white, fontFamily: fonts.primary.regular, fontSize: 16,
   },
   button: {
-    backgroundColor: colors.trellio, borderRadius: 10, minHeight: 48,
+    backgroundColor: colors.scaffld, borderRadius: 10, minHeight: 48,
     alignItems: 'center', justifyContent: 'center', marginTop: spacing.lg,
   },
   buttonDisabled: { opacity: 0.7 },
   buttonText: { color: colors.white, fontFamily: fonts.primary.semiBold, fontSize: 16 },
   linkButton: { alignItems: 'center', marginTop: spacing.lg, padding: spacing.sm },
-  linkText: { color: colors.trellio, fontFamily: fonts.primary.medium, fontSize: 14 },
+  linkText: { color: colors.scaffld, fontFamily: fonts.primary.medium, fontSize: 14 },
   errorBox: {
     backgroundColor: 'rgba(247,132,94,0.1)', borderWidth: 1,
     borderColor: 'rgba(247,132,94,0.3)', borderRadius: 8, padding: spacing.sm,
@@ -124,5 +124,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(14,165,160,0.1)', borderWidth: 1,
     borderColor: 'rgba(14,165,160,0.3)', borderRadius: 8, padding: spacing.md,
   },
-  successText: { color: colors.trellio, fontFamily: fonts.primary.medium, fontSize: 14 },
+  successText: { color: colors.scaffld, fontFamily: fonts.primary.medium, fontSize: 14 },
 });

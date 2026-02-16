@@ -16,7 +16,7 @@ export default function CheckboxFormField({ field, value, error, onChange }) {
         <Ionicons
           name={checked ? 'checkbox' : 'square-outline'}
           size={24}
-          color={checked ? colors.trellio : colors.muted}
+          color={checked ? colors.scaffld : colors.muted}
         />
         <Text style={styles.label}>
           {field.label}{field.required ? ' *' : ''}

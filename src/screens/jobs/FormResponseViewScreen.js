@@ -32,7 +32,7 @@ export default function FormResponseViewScreen({ route }) {
 
       {response.location && (
         <View style={styles.locationRow}>
-          <Ionicons name="location" size={14} color={colors.trellio} />
+          <Ionicons name="location" size={14} color={colors.scaffld} />
           <Text style={styles.locationText}>Location captured</Text>
         </View>
       )}
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   title: { ...typeScale.h2, color: colors.white, marginBottom: spacing.xs },
   date: { ...typeScale.bodySm, color: colors.muted, marginBottom: spacing.sm },
   locationRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: spacing.md },
-  locationText: { ...typeScale.bodySm, color: colors.trellio },
+  locationText: { ...typeScale.bodySm, color: colors.scaffld },
   card: { marginTop: spacing.sm },
   fieldRow: { marginBottom: spacing.md },
   fieldLabel: { fontFamily: fonts.data.medium, fontSize: 11, letterSpacing: 2, textTransform: 'uppercase', color: colors.muted, marginBottom: spacing.xs },

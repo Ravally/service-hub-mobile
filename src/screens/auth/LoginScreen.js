@@ -37,8 +37,8 @@ export default function LoginScreen({ navigation }) {
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.header}>
-            <Text style={styles.logo}>trellio</Text>
-            <Text style={styles.tagline}>Structure your growth.</Text>
+            <Text style={styles.logo}>scaffld</Text>
+            <Text style={styles.tagline}>Build on Scaffld.</Text>
           </View>
 
           <View style={styles.card}>
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   logo: {
     fontSize: 40,
     fontFamily: fonts.primary.bold,
-    color: colors.trellio,
+    color: colors.scaffld,
     letterSpacing: -1,
   },
   tagline: {
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   button: {
-    backgroundColor: colors.trellio,
+    backgroundColor: colors.scaffld,
     borderRadius: 10,
     minHeight: 48,
     alignItems: 'center',
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   linkButton: { alignItems: 'center', marginTop: spacing.md, padding: spacing.sm },
-  linkText: { color: colors.trellio, fontFamily: fonts.primary.medium, fontSize: 14 },
+  linkText: { color: colors.scaffld, fontFamily: fonts.primary.medium, fontSize: 14 },
   errorBox: {
     backgroundColor: 'rgba(247, 132, 94, 0.1)',
     borderWidth: 1,

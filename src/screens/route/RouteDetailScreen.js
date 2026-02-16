@@ -127,7 +127,7 @@ export default function RouteDetailScreen({ navigation }) {
                       onPress={() => handleCompleteJob(job)}
                       activeOpacity={0.7}
                     >
-                      <Ionicons name="checkmark-circle-outline" size={22} color={colors.trellio} />
+                      <Ionicons name="checkmark-circle-outline" size={22} color={colors.scaffld} />
                     </TouchableOpacity>
                   )}
                 </View>
@@ -164,9 +164,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md, minHeight: 56,
     borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.slate,
   },
-  activeRow: { backgroundColor: colors.trellioSubtle },
+  activeRow: { backgroundColor: colors.scaffldSubtle },
   orderBadge: {
-    width: 28, height: 28, borderRadius: 14, backgroundColor: colors.trellio,
+    width: 28, height: 28, borderRadius: 14, backgroundColor: colors.scaffld,
     alignItems: 'center', justifyContent: 'center', marginRight: spacing.sm,
   },
   completedBadge: { backgroundColor: colors.muted },
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
   jobInfo: { flex: 1, marginRight: spacing.sm },
   jobTitle: { ...typeScale.bodySm, color: colors.silver },
   jobMeta: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginTop: 2 },
-  jobDist: { fontFamily: fonts.data.regular, fontSize: 11, color: colors.trellio },
+  jobDist: { fontFamily: fonts.data.regular, fontSize: 11, color: colors.scaffld },
   jobAddr: { ...typeScale.bodySm, color: colors.muted, fontSize: 11, flex: 1 },
   jobActions: { alignItems: 'flex-end', gap: 6 },
   completeBtn: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },

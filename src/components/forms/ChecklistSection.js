@@ -79,7 +79,7 @@ export default function ChecklistSection({ checklist, userId, onToggle, onUpdate
               <Ionicons
                 name={item.completed ? 'checkbox' : 'square-outline'}
                 size={22}
-                color={item.completed ? colors.trellio : item.required ? colors.coral : colors.muted}
+                color={item.completed ? colors.scaffld : item.required ? colors.coral : colors.muted}
               />
               <Text style={[styles.itemText, item.completed && styles.itemDone]} numberOfLines={expanded ? undefined : 2}>
                 {item.text}
@@ -104,7 +104,7 @@ export default function ChecklistSection({ checklist, userId, onToggle, onUpdate
                   <Image key={idx} source={{ uri: photo.url }} style={styles.photo} />
                 ))}
                 <TouchableOpacity style={styles.photoBtn} onPress={() => handleAddPhoto(item.id)} activeOpacity={0.7}>
-                  <Ionicons name="camera-outline" size={18} color={colors.trellio} />
+                  <Ionicons name="camera-outline" size={18} color={colors.scaffld} />
                   <Text style={styles.photoBtnText}>Add Photo</Text>
                 </TouchableOpacity>
               </View>
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   sectionLabel: { fontFamily: fonts.data.medium, fontSize: 11, letterSpacing: 2, textTransform: 'uppercase', color: colors.muted, marginBottom: spacing.sm },
   progressRow: { flexDirection: 'row', alignItems: 'center', marginBottom: spacing.md },
   progressBar: { flex: 1, height: 6, backgroundColor: colors.slate, borderRadius: 3, marginRight: spacing.sm, overflow: 'hidden' },
-  progressFill: { height: 6, backgroundColor: colors.trellio, borderRadius: 3 },
+  progressFill: { height: 6, backgroundColor: colors.scaffld, borderRadius: 3 },
   progressText: { fontFamily: fonts.data.regular, fontSize: 13, color: colors.muted, width: 40, textAlign: 'right' },
   itemContainer: { borderBottomWidth: 1, borderBottomColor: colors.slate },
   itemRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 10, minHeight: 48 },
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
   noteInput: { backgroundColor: colors.midnight, borderWidth: 1, borderColor: colors.slate, borderRadius: 8, padding: spacing.sm, color: colors.white, fontFamily: fonts.primary.regular, fontSize: 14, minHeight: 48, marginBottom: spacing.sm },
   photo: { width: '100%', height: 120, borderRadius: 8, marginBottom: spacing.sm },
   photoBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingVertical: 8, minHeight: 44 },
-  photoBtnText: { ...typeScale.bodySm, color: colors.trellio },
-  markAllBtn: { marginTop: spacing.md, alignItems: 'center', paddingVertical: 12, borderWidth: 1, borderColor: colors.trellio, borderRadius: 10, minHeight: 48 },
-  markAllText: { ...typeScale.bodySm, color: colors.trellio, fontFamily: fonts.primary.semiBold },
+  photoBtnText: { ...typeScale.bodySm, color: colors.scaffld },
+  markAllBtn: { marginTop: spacing.md, alignItems: 'center', paddingVertical: 12, borderWidth: 1, borderColor: colors.scaffld, borderRadius: 10, minHeight: 48 },
+  markAllText: { ...typeScale.bodySm, color: colors.scaffld, fontFamily: fonts.primary.semiBold },
 });

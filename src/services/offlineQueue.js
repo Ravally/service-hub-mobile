@@ -3,8 +3,8 @@ import { addUserDoc, updateUserDoc, setUserDoc, userDoc } from './firestore';
 import { uploadImage } from './imageService';
 import { getDoc } from 'firebase/firestore';
 
-const QUEUE_KEY = '@trellio/offline_queue';
-const DEAD_LETTER_KEY = '@trellio/offline_dead_letter';
+const QUEUE_KEY = '@scaffld/offline_queue';
+const DEAD_LETTER_KEY = '@scaffld/offline_dead_letter';
 const MAX_RETRIES = 5;
 
 let queue = [];

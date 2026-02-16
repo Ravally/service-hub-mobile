@@ -4,10 +4,10 @@ import { colors, fonts, spacing } from '../../theme';
 import { mediumImpact } from '../../utils/haptics';
 
 const VARIANTS = {
-  primary: { bg: colors.trellio, text: colors.white },
+  primary: { bg: colors.scaffld, text: colors.white },
   secondary: { bg: colors.charcoal, text: colors.silver, border: colors.slate },
   danger: { bg: colors.coral, text: colors.white },
-  ghost: { bg: 'transparent', text: colors.trellio, border: colors.slate },
+  ghost: { bg: 'transparent', text: colors.scaffld, border: colors.slate },
 };
 
 export default function Button({

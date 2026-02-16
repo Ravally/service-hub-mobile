@@ -89,7 +89,7 @@ export default function JobMapView({ jobs = [], optimizedRoute, onJobPress, onNa
         {routeJobs.length > 1 && (
           <Polyline
             coordinates={routeJobs.map((j) => ({ latitude: j.lat, longitude: j.lng }))}
-            strokeColor={colors.trellio}
+            strokeColor={colors.scaffld}
             strokeWidth={3}
             lineDashPattern={[6, 4]}
           />
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   webText: { ...typeScale.bodySm, color: colors.muted, marginTop: spacing.sm },
   numberedPin: {
     width: 28, height: 28, borderRadius: 14,
-    backgroundColor: colors.trellio, alignItems: 'center', justifyContent: 'center',
+    backgroundColor: colors.scaffld, alignItems: 'center', justifyContent: 'center',
     borderWidth: 2, borderColor: colors.white,
   },
   pinNumber: { fontFamily: fonts.data.bold, fontSize: 12, color: colors.white },
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     minWidth: 200, maxWidth: 260, borderWidth: 1, borderColor: colors.slate,
   },
   calloutTitle: { ...typeScale.body, color: colors.white, marginBottom: 2 },
-  calloutClient: { ...typeScale.bodySm, color: colors.trellio, marginBottom: 2 },
+  calloutClient: { ...typeScale.bodySm, color: colors.scaffld, marginBottom: 2 },
   calloutAddr: { ...typeScale.bodySm, color: colors.muted, marginBottom: spacing.sm },
   calloutFooter: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   calloutBtn: { paddingHorizontal: spacing.sm, minHeight: 36, paddingVertical: 6 },

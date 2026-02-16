@@ -10,10 +10,10 @@ import MainTabs from './MainTabs';
 export const navigationRef = React.createRef();
 const Stack = createNativeStackNavigator();
 
-const trellioNavTheme = {
+const scaffldNavTheme = {
   dark: true,
   colors: {
-    primary: colors.trellio,
+    primary: colors.scaffld,
     background: colors.midnight,
     card: colors.charcoal,
     text: colors.white,
@@ -31,7 +31,7 @@ const trellioNavTheme = {
 function SplashScreen() {
   return (
     <View style={styles.splash}>
-      <ActivityIndicator size="large" color={colors.trellio} />
+      <ActivityIndicator size="large" color={colors.scaffld} />
     </View>
   );
 }
@@ -43,7 +43,7 @@ export default function RootNavigator() {
   if (isLoading) return <SplashScreen />;
 
   return (
-    <NavigationContainer theme={trellioNavTheme} ref={navigationRef}>
+    <NavigationContainer theme={scaffldNavTheme} ref={navigationRef}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {isAuthenticated ? (
           <Stack.Screen name="Main" component={MainTabs} />

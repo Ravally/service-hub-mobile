@@ -10,7 +10,7 @@ export default function SyncStatusBadge() {
 
   if (isOnline && pendingCount === 0 && !isSyncing) return null;
 
-  let dotColor = colors.trellio;
+  let dotColor = colors.scaffld;
   let label = 'Synced';
 
   if (isSyncing) {

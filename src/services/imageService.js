@@ -1,6 +1,18 @@
 import * as ImagePicker from 'expo-image-picker';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { Alert, Linking } from 'react-native';
 import { storage } from './firebase';
+
+function showPermissionAlert(type) {
+  Alert.alert(
+    `${type} Access Required`,
+    `Scaffld needs ${type.toLowerCase()} access to attach photos. Please enable it in Settings.`,
+    [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Open Settings', onPress: () => Linking.openSettings() },
+    ],
+  );
+}
 
 const PICKER_OPTIONS = {
   quality: 0.7,
@@ -16,7 +28,10 @@ const PICKER_OPTIONS = {
 export async function pickFromCamera() {
   try {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
-    if (status !== 'granted') return null;
+    if (status !== 'granted') {
+      showPermissionAlert('Camera');
+      return null;
+    }
 
     const result = await ImagePicker.launchCameraAsync(PICKER_OPTIONS);
     if (result.canceled || !result.assets?.length) return null;
@@ -33,7 +48,10 @@ export async function pickFromCamera() {
 export async function pickFromGallery() {
   try {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== 'granted') return null;
+    if (status !== 'granted') {
+      showPermissionAlert('Photo Library');
+      return null;
+    }
 
     const result = await ImagePicker.launchImageLibraryAsync(PICKER_OPTIONS);
     if (result.canceled || !result.assets?.length) return null;

@@ -1,7 +1,7 @@
 export default {
   expo: {
-    name: 'Trellio',
-    slug: 'trellio',
+    name: 'Scaffld',
+    slug: 'scaffld',
     version: '1.0.0',
     orientation: 'portrait',
     icon: './assets/icon.png',
@@ -14,14 +14,14 @@ export default {
     },
     ios: {
       supportsTablet: false,
-      bundleIdentifier: 'app.trellio.mobile',
+      bundleIdentifier: 'app.scaffld.mobile',
       infoPlist: {
         NSLocationWhenInUseUsageDescription:
-          'Trellio uses your location to track clock-in/out for jobs.',
+          'Scaffld uses your location to track clock-in/out for jobs.',
         NSLocationAlwaysAndWhenInUseUsageDescription:
-          'Trellio tracks your location during active jobs for GPS logging.',
+          'Scaffld tracks your location during active jobs for GPS logging.',
         NSCameraUsageDescription:
-          'Trellio uses the camera for job photos and form submissions.',
+          'Scaffld uses the camera for job photos and form submissions.',
       },
     },
     android: {
@@ -29,7 +29,7 @@ export default {
         foregroundImage: './assets/adaptive-icon.png',
         backgroundColor: '#0C1220',
       },
-      package: 'app.trellio.mobile',
+      package: 'app.scaffld.mobile',
       config: {
         googleMaps: {
           apiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_KEY,
@@ -38,6 +38,7 @@ export default {
       permissions: [
         'ACCESS_FINE_LOCATION',
         'ACCESS_COARSE_LOCATION',
+        'ACCESS_BACKGROUND_LOCATION',
         'CAMERA',
         'RECEIVE_BOOT_COMPLETED',
         'VIBRATE',
@@ -49,10 +50,21 @@ export default {
     plugins: [
       'expo-font',
       [
+        'expo-location',
+        {
+          locationAlwaysAndWhenInUsePermission:
+            'Scaffld uses your location in the background to auto-start timers when you arrive at job sites.',
+          locationWhenInUsePermission:
+            'Scaffld uses your location to track clock-in/out for jobs.',
+          isIosBackgroundLocationEnabled: true,
+          isAndroidBackgroundLocationEnabled: true,
+        },
+      ],
+      [
         'expo-image-picker',
         {
-          photosPermission: 'Trellio uses your photos for job documentation.',
-          cameraPermission: 'Trellio uses the camera for job photos and form submissions.',
+          photosPermission: 'Scaffld uses your photos for job documentation.',
+          cameraPermission: 'Scaffld uses the camera for job photos and form submissions.',
         },
       ],
       [
@@ -62,6 +74,8 @@ export default {
           sounds: [],
         },
       ],
+      '@react-native-community/datetimepicker',
+      'expo-quick-actions',
     ],
     extra: {
       firebaseApiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
@@ -70,6 +84,8 @@ export default {
       firebaseStorageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
       firebaseMessagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
       firebaseAppId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
+      functionsBaseUrl: process.env.EXPO_PUBLIC_FUNCTIONS_BASE_URL,
+      stripePublishableKey: process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY,
     },
   },
 };

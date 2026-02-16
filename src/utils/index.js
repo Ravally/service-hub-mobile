@@ -1,4 +1,4 @@
-export { formatCurrency, formatDate, formatDateTime, toDateInput, toIsoDate, formatPhone, formatNumber } from './formatters';
+export { formatCurrency, formatCompactCurrency, formatDate, formatDateTime, toDateInput, toIsoDate, formatPhone, formatNumber } from './formatters';
 export { computeTotals, calculateJobProfitability, computeDueDate, calculateInvoiceBalance } from './calculations';
 export { inRange, lastNDays, last30ExcludingToday, monthRange, yearRange, periodRange, getPreviousRange, rangeLabel, daysBetween, isOverdue, addDays } from './dateUtils';
 export { isValidEmail, isValidPhone, isRequired, isPositive, isNonNegative, isLengthValid, isValidUrl, isFutureDate, isPastDate, isValidPercentage } from './validation';

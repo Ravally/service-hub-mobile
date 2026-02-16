@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   inputFocused: {
-    borderColor: colors.trellio,
+    borderColor: colors.scaffld,
   },
   inputError: {
     borderColor: colors.coral,

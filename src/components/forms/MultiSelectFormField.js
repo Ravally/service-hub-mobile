@@ -44,7 +44,7 @@ export default function MultiSelectFormField({ field, value, error, onChange }) 
                     <Ionicons
                       name={checked ? 'checkbox' : 'square-outline'}
                       size={22}
-                      color={checked ? colors.trellio : colors.muted}
+                      color={checked ? colors.scaffld : colors.muted}
                     />
                     <Text style={[styles.optionText, checked && styles.optionChecked]}>{opt}</Text>
                   </TouchableOpacity>
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   scroll: { maxHeight: 300 },
   option: { flexDirection: 'row', alignItems: 'center', paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: colors.slate, minHeight: 48 },
   optionText: { ...typeScale.body, color: colors.white, marginLeft: spacing.sm },
-  optionChecked: { color: colors.trellio },
-  doneBtn: { marginTop: spacing.md, alignItems: 'center', backgroundColor: colors.trellio, borderRadius: 10, paddingVertical: 14, minHeight: 48 },
+  optionChecked: { color: colors.scaffld },
+  doneBtn: { marginTop: spacing.md, alignItems: 'center', backgroundColor: colors.scaffld, borderRadius: 10, paddingVertical: 14, minHeight: 48 },
   doneText: { ...typeScale.body, color: colors.white, fontFamily: fonts.primary.semiBold },
 });

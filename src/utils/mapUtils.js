@@ -6,7 +6,7 @@ import { colors } from '../theme';
 
 /** Status → marker pin color */
 export const JOB_STATUS_COLORS = {
-  Scheduled: colors.trellio,
+  Scheduled: colors.scaffld,
   'In Progress': colors.amber,
   Completed: colors.muted,
   Cancelled: colors.coral,

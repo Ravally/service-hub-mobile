@@ -21,10 +21,17 @@ import { useClientsStore } from './src/stores/clientsStore';
 import { useStaffStore } from './src/stores/staffStore';
 import { useFormTemplatesStore } from './src/stores/formTemplatesStore';
 import { useFormResponsesStore } from './src/stores/formResponsesStore';
+import { useQuotesStore } from './src/stores/quotesStore';
+import { useInvoicesStore } from './src/stores/invoicesStore';
+import { useMessagesStore } from './src/stores/messagesStore';
 import RootNavigator, { navigationRef } from './src/navigation/RootNavigator';
 import ToastContainer from './src/components/ui/Toast';
 import { registerForPushNotifications, setupNotificationHandlers, scheduleDailyJobReminder, cancelAllNotifications } from './src/services/notificationService';
 import { useOfflineSyncStore } from './src/stores/offlineSyncStore';
+import { startNotificationTriggers } from './src/services/notificationTriggers';
+import { registerTodayGeofences, stopGeofencing } from './src/services/geofenceService';
+import { registerQuickActions, handleQuickAction, getInitialQuickAction } from './src/services/quickActionsService';
+import * as QuickActions from 'expo-quick-actions';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -53,6 +60,9 @@ export default function App() {
       useStaffStore.getState().subscribe(userId);
       useFormTemplatesStore.getState().subscribe(userId);
       useFormResponsesStore.getState().subscribe(userId);
+      useQuotesStore.getState().subscribe(userId);
+      useInvoicesStore.getState().subscribe(userId);
+      useMessagesStore.getState().subscribe(userId);
 
       // Offline sync
       useOfflineSyncStore.getState().initialize(userId);
@@ -62,8 +72,32 @@ export default function App() {
         if (token) useAuthStore.getState().setPushToken(token);
       });
       const cleanupHandlers = setupNotificationHandlers(navigationRef);
+      const cleanupTriggers = startNotificationTriggers();
+
+      // Quick actions (long-press app icon shortcuts)
+      registerQuickActions();
+      const initialAction = getInitialQuickAction();
+      if (initialAction) handleQuickAction(initialAction, navigationRef);
+      const quickActionSub = QuickActions.addListener((action) => {
+        handleQuickAction(action, navigationRef);
+      });
+
+      // Geofence: register when jobs load, re-register on job changes
+      let geofenceTimer = null;
+      const cleanupGeofences = useJobsStore.subscribe((state) => {
+        if (!state.loading && state.jobs.length > 0) {
+          clearTimeout(geofenceTimer);
+          geofenceTimer = setTimeout(() => registerTodayGeofences(), 2000);
+        }
+      });
+
       return () => {
         cleanupHandlers();
+        cleanupTriggers();
+        cleanupGeofences();
+        quickActionSub.remove();
+        clearTimeout(geofenceTimer);
+        stopGeofencing();
         useOfflineSyncStore.getState().teardown();
       };
     } else {
@@ -72,7 +106,11 @@ export default function App() {
       useStaffStore.getState().unsubscribe();
       useFormTemplatesStore.getState().unsubscribe();
       useFormResponsesStore.getState().unsubscribe();
+      useQuotesStore.getState().unsubscribe();
+      useInvoicesStore.getState().unsubscribe();
+      useMessagesStore.getState().unsubscribe();
       cancelAllNotifications();
+      stopGeofencing();
       useOfflineSyncStore.getState().teardown();
     }
   }, [userId]);

@@ -73,6 +73,18 @@ export default function JobFormScreen({ route, navigation }) {
             }
           }
         }
+        // Upload signature base64 data URIs
+        if (field.type === 'signature' && responses[field.id]) {
+          const sig = responses[field.id];
+          if (sig.startsWith('data:') && isOnline) {
+            const path = `users/${userId}/forms/${templateId}/${field.id}_sig_${Date.now()}.png`;
+            const url = await uploadImage(sig, path);
+            if (url) {
+              finalResponses[field.id] = url;
+              attachments.push({ fieldId: field.id, url, type: 'signature', uploadedAt: new Date().toISOString() });
+            }
+          }
+        }
       }
 
       const loc = await getCurrentLocation();

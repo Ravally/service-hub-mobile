@@ -47,3 +47,10 @@ export function formatNumber(value, decimals = 2) {
   const num = Number(value || 0);
   return num.toFixed(decimals);
 }
+
+export function formatCompactCurrency(value) {
+  const num = Number(value || 0);
+  if (num >= 1000000) return `$${(num / 1000000).toFixed(1)}M`;
+  if (num >= 1000) return `$${(num / 1000).toFixed(1)}k`;
+  return formatCurrency(num);
+}

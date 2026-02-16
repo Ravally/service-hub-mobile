@@ -12,6 +12,8 @@ import { openInMaps } from '../../utils/mapUtils';
 import JobCard from '../../components/jobs/JobCard';
 import JobMapView from '../../components/maps/JobMapView';
 import RouteSummaryCard from '../../components/maps/RouteSummaryCard';
+import CategorySectionList from '../../components/home/CategorySectionList';
+import { useCategorySections } from '../../stores/dashboardStore';
 import LoadingSkeleton from '../../components/ui/LoadingSkeleton';
 import EmptyState from '../../components/ui/EmptyState';
 import { scheduleDailyJobReminder } from '../../services/notificationService';
@@ -29,6 +31,7 @@ export default function TodayJobsScreen({ navigation }) {
   const activeJobIndex = useRouteStore((s) => s.activeJobIndex);
   const isOptimizing = useRouteStore((s) => s.isOptimizing);
 
+  const categorySections = useCategorySections();
   const [viewMode, setViewMode] = useState('list');
   const [refreshing, setRefreshing] = useState(false);
 
@@ -105,7 +108,7 @@ export default function TodayJobsScreen({ navigation }) {
   if (loading) {
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
-        <Text style={styles.headerTitle}>Today's Jobs</Text>
+        <Text style={styles.headerTitle}>Home</Text>
         <LoadingSkeleton count={4} variant="card" />
       </SafeAreaView>
     );
@@ -115,7 +118,7 @@ export default function TodayJobsScreen({ navigation }) {
     <SafeAreaView style={styles.container} edges={['top']}>
       {/* Header row with view toggle */}
       <View style={styles.headerRow}>
-        <Text style={styles.headerTitle}>Today's Jobs</Text>
+        <Text style={styles.headerTitle}>Home</Text>
         <View style={styles.headerActions}>
           {viewMode === 'map' && mappableJobs.length > 0 && (
             <TouchableOpacity
@@ -127,7 +130,7 @@ export default function TodayJobsScreen({ navigation }) {
               <Ionicons
                 name="navigate-outline"
                 size={20}
-                color={isOptimizing ? colors.muted : colors.trellio}
+                color={isOptimizing ? colors.muted : colors.scaffld}
               />
             </TouchableOpacity>
           )}
@@ -139,7 +142,7 @@ export default function TodayJobsScreen({ navigation }) {
             <Ionicons
               name={viewMode === 'list' ? 'map-outline' : 'list-outline'}
               size={20}
-              color={colors.trellio}
+              color={colors.scaffld}
             />
           </TouchableOpacity>
         </View>
@@ -159,6 +162,9 @@ export default function TodayJobsScreen({ navigation }) {
           ItemSeparatorComponent={() => <View style={styles.separator} />}
           refreshing={refreshing}
           onRefresh={handleRefresh}
+          ListHeaderComponent={
+            <CategorySectionList sections={categorySections} navigation={navigation} />
+          }
           ListEmptyComponent={
             <EmptyState
               icon="calendar-outline"

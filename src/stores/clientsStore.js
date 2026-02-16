@@ -1,6 +1,10 @@
 import { create } from 'zustand';
 import { onSnapshot } from 'firebase/firestore';
 import { userCollection } from '../services/firestore';
+import {
+  offlineAddUserDoc,
+  offlineUpdateUserDoc,
+} from '../services/offlineFirestore';
 
 export const useClientsStore = create((set, get) => ({
   clients: [],
@@ -53,5 +57,29 @@ export const useClientsStore = create((set, get) => ({
 
   getClientsByStatus: (status) => {
     return get().clients.filter((c) => c.status === status);
+  },
+
+  // --- Mutations ---
+
+  createClient: async (userId, clientData) => {
+    const now = new Date().toISOString();
+    const data = {
+      ...clientData,
+      status: clientData.status || 'Active',
+      createdAt: now,
+      updatedAt: now,
+    };
+    return await offlineAddUserDoc(userId, 'clients', data);
+  },
+
+  updateClient: async (userId, clientId, updates) => {
+    set((state) => ({
+      clients: state.clients.map((c) =>
+        c.id === clientId
+          ? { ...c, ...updates, updatedAt: new Date().toISOString() }
+          : c,
+      ),
+    }));
+    await offlineUpdateUserDoc(userId, 'clients', clientId, updates);
   },
 }));

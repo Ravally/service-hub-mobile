@@ -42,7 +42,7 @@ export default function SelectFormField({ field, value, error, onChange }) {
                   <Text style={[styles.optionText, value === opt && styles.optionTextSelected]}>
                     {opt}
                   </Text>
-                  {value === opt && <Ionicons name="checkmark" size={20} color={colors.trellio} />}
+                  {value === opt && <Ionicons name="checkmark" size={20} color={colors.scaffld} />}
                 </TouchableOpacity>
               ))}
             </ScrollView>
@@ -69,9 +69,9 @@ const styles = StyleSheet.create({
   modalTitle: { ...typeScale.h3, color: colors.white, marginBottom: spacing.md },
   scroll: { maxHeight: 300 },
   option: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: colors.slate, minHeight: 48 },
-  optionSelected: { backgroundColor: colors.trellioSubtle },
+  optionSelected: { backgroundColor: colors.scaffldSubtle },
   optionText: { ...typeScale.body, color: colors.white },
-  optionTextSelected: { color: colors.trellio },
+  optionTextSelected: { color: colors.scaffld },
   cancelBtn: { marginTop: spacing.md, alignItems: 'center', paddingVertical: 14, minHeight: 48 },
   cancelText: { ...typeScale.body, color: colors.coral },
 });

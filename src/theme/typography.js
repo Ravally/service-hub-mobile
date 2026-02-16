@@ -1,5 +1,5 @@
 /**
- * Trellio typography tokens for React Native
+ * Scaffld typography tokens for React Native
  * Fonts loaded via @expo-google-fonts in App.js
  */
 

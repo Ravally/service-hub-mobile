@@ -7,3 +7,4 @@ export { useFormTemplatesStore } from './formTemplatesStore';
 export { useFormResponsesStore } from './formResponsesStore';
 export { useOfflineSyncStore } from './offlineSyncStore';
 export { useRouteStore } from './routeStore';
+export { useMessagesStore } from './messagesStore';

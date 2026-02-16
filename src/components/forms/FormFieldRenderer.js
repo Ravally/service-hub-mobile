@@ -6,7 +6,7 @@ import SelectFormField from './SelectFormField';
 import MultiSelectFormField from './MultiSelectFormField';
 import CheckboxFormField from './CheckboxFormField';
 import PhotoFormField from './PhotoFormField';
-import SignaturePlaceholder from './SignaturePlaceholder';
+import SignatureField from './SignatureField';
 import SectionHeader from './SectionHeader';
 
 const FIELD_MAP = {
@@ -22,7 +22,7 @@ const FIELD_MAP = {
   multiselect: MultiSelectFormField,
   checkbox: CheckboxFormField,
   photo: PhotoFormField,
-  signature: SignaturePlaceholder,
+  signature: SignatureField,
   section_header: SectionHeader,
 };
 
@@ -36,7 +36,7 @@ export default function FormFieldRenderer({ field, value, error, onChange }) {
 
   if (!Component) return null;
 
-  if (type === 'section_header' || type === 'signature') {
+  if (type === 'section_header') {
     return <Component field={field} />;
   }
 

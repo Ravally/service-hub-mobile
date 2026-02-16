@@ -117,9 +117,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row', alignItems: 'center', paddingVertical: 10,
     minHeight: 48, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.slate,
   },
-  activeRow: { backgroundColor: colors.trellioSubtle, borderRadius: 10, paddingHorizontal: 8 },
+  activeRow: { backgroundColor: colors.scaffldSubtle, borderRadius: 10, paddingHorizontal: 8 },
   orderBadge: {
-    width: 26, height: 26, borderRadius: 13, backgroundColor: colors.trellio,
+    width: 26, height: 26, borderRadius: 13, backgroundColor: colors.scaffld,
     alignItems: 'center', justifyContent: 'center', marginRight: spacing.sm,
   },
   orderText: { fontFamily: fonts.data.bold, fontSize: 12, color: colors.white },

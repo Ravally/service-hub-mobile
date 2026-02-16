@@ -1,9 +1,19 @@
 /**
- * Business calculation utilities for quotes, invoices, and jobs
+ * Business calculation utilities for quotes, invoices, and jobs.
+ * Money is stored as integers (cents) in Firestore.
  */
 
-export function computeTotals(doc) {
-  const items = doc.lineItems || [];
+/**
+ * Compute totals for a quote or invoice.
+ * Accepts either a document object or (lineItems, taxRate) for convenience.
+ * @param {Object|Array} docOrItems - Document with lineItems/taxRate, or array of line items
+ * @param {number} [taxRateArg] - Tax percentage when first arg is an array
+ */
+export function computeTotals(docOrItems, taxRateArg) {
+  const isArr = Array.isArray(docOrItems);
+  const items = isArr ? docOrItems : (docOrItems.lineItems || []);
+  const taxRate = isArr ? (parseFloat(taxRateArg) || 0) : (parseFloat(docOrItems.taxRate || 0));
+
   let subtotalBeforeDiscount = 0;
   let lineDiscountTotal = 0;
 
@@ -22,6 +32,7 @@ export function computeTotals(doc) {
     lineDiscountTotal += (Number.isFinite(ldAmt) ? ldAmt : 0);
   });
 
+  const doc = isArr ? {} : docOrItems;
   const quoteDiscType = doc.quoteDiscountType || doc.discountType || 'amount';
   const quoteDiscValue = parseFloat(doc.quoteDiscountValue ?? doc.discountValue ?? 0);
   const discountedSubtotal = Math.max(0, subtotalBeforeDiscount - lineDiscountTotal);
@@ -30,21 +41,24 @@ export function computeTotals(doc) {
     : quoteDiscValue;
   const afterAllDiscounts = Math.max(0, discountedSubtotal - (Number.isFinite(quoteDiscAmt) ? quoteDiscAmt : 0));
 
-  const taxRate = parseFloat(doc.taxRate || 0);
   const taxAmount = afterAllDiscounts * (taxRate / 100);
   const total = afterAllDiscounts + taxAmount;
 
   const originalTax = subtotalBeforeDiscount * (taxRate / 100);
   const originalTotal = subtotalBeforeDiscount + originalTax;
   const totalSavings = Math.max(0, originalTotal - total);
+  const totalDiscount = lineDiscountTotal + (Number.isFinite(quoteDiscAmt) ? quoteDiscAmt : 0);
 
   return {
     subtotalBeforeDiscount,
+    subtotal: subtotalBeforeDiscount,
     lineDiscountTotal,
+    discount: totalDiscount,
     quoteDiscountAmount: Number.isFinite(quoteDiscAmt) ? quoteDiscAmt : 0,
     discountedSubtotal,
     afterAllDiscounts,
     taxAmount,
+    tax: taxAmount,
     total,
     originalTotal,
     totalSavings,

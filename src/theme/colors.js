@@ -1,10 +1,17 @@
 /**
- * Trellio brand color tokens for React Native
+ * Scaffld brand color tokens for React Native
  * Source: brand/tokens.json
  */
 
 export const colors = {
   // Primary
+  scaffld: '#0EA5A0',
+  scaffldDeep: '#087F7A',
+  scaffldLight: '#B2F0ED',
+  scaffldGlow: 'rgba(14, 165, 160, 0.2)',
+  scaffldSubtle: 'rgba(14, 165, 160, 0.08)',
+
+  // Legacy aliases (existing code references these — migrate gradually)
   trellio: '#0EA5A0',
   trellioDeep: '#087F7A',
   trellioLight: '#B2F0ED',
