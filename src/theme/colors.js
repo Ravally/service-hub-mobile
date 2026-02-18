@@ -18,6 +18,13 @@ export const colors = {
   trellioGlow: 'rgba(14, 165, 160, 0.2)',
   trellioSubtle: 'rgba(14, 165, 160, 0.08)',
 
+  // Clamp (AI assistant)
+  clamp: '#F59E0B',
+  clampDeep: '#D97706',
+  clampSoft: 'rgba(245, 158, 11, 0.10)',
+  clampBorder: 'rgba(245, 158, 11, 0.25)',
+  clampHover: 'rgba(245, 158, 11, 0.20)',
+
   // Accent
   coral: '#F7845E',
   coralDeep: '#E56840',

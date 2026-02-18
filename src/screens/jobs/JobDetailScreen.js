@@ -461,23 +461,23 @@ function NotesTab({ job }) {
           <Text style={styles.notesText}>{internalNotes}</Text>
         </Card>
       ) : null}
-      <Card style={[styles.section, styles.aiSummaryCard]}>
-        <View style={styles.aiSummaryHeader}>
-          <View style={styles.aiSummaryLabel}>
-            <Ionicons name="sparkles" size={14} color="#A78BFA" />
-            <Text style={styles.aiSummaryTitle}>AI Summary</Text>
+      <Card style={[styles.section, styles.clampSummaryCard]}>
+        <View style={styles.clampSummaryHeader}>
+          <View style={styles.clampSummaryLabel}>
+            <Ionicons name="code-slash-outline" size={14} color={colors.clamp} />
+            <Text style={styles.clampSummaryTitle}>Clamp Summary</Text>
           </View>
           {!aiSummary && (
             <TouchableOpacity
-              style={styles.aiSummaryBtn}
+              style={styles.clampSummaryBtn}
               onPress={handleGenerateSummary}
               disabled={aiLoading}
               activeOpacity={0.7}
             >
               {aiLoading ? (
-                <ActivityIndicator size="small" color="#A78BFA" />
+                <ActivityIndicator size="small" color={colors.clamp} />
               ) : (
-                <Text style={styles.aiSummaryBtnText}>Generate</Text>
+                <Text style={styles.clampSummaryBtnText}>Ask Clamp</Text>
               )}
             </TouchableOpacity>
           )}
@@ -485,8 +485,8 @@ function NotesTab({ job }) {
         {aiSummary && (
           <>
             <Text style={styles.notesText}>{aiSummary}</Text>
-            <TouchableOpacity onPress={() => setAiSummary(null)} style={styles.aiDismissBtn}>
-              <Text style={styles.aiDismissBtnText}>Dismiss</Text>
+            <TouchableOpacity onPress={() => setAiSummary(null)} style={styles.clampDismissBtn}>
+              <Text style={styles.clampDismissBtnText}>Dismiss</Text>
             </TouchableOpacity>
           </>
         )}
@@ -829,16 +829,16 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
 
-  // AI Summary
-  aiSummaryCard: { borderColor: 'rgba(167,139,250,0.2)' },
-  aiSummaryHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.sm },
-  aiSummaryLabel: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  aiSummaryTitle: { fontFamily: fonts.primary.semiBold, fontSize: 13, color: '#A78BFA' },
-  aiSummaryBtn: {
-    backgroundColor: 'rgba(167,139,250,0.1)', borderRadius: 8, borderWidth: 1, borderColor: 'rgba(167,139,250,0.25)',
+  // Clamp Summary
+  clampSummaryCard: { borderColor: colors.clampBorder },
+  clampSummaryHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.sm },
+  clampSummaryLabel: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  clampSummaryTitle: { fontFamily: fonts.primary.semiBold, fontSize: 13, color: colors.clamp },
+  clampSummaryBtn: {
+    backgroundColor: colors.clampSoft, borderRadius: 8, borderWidth: 1, borderColor: colors.clampBorder,
     paddingHorizontal: 12, paddingVertical: 6, minHeight: 32, justifyContent: 'center',
   },
-  aiSummaryBtnText: { fontFamily: fonts.primary.medium, fontSize: 12, color: '#A78BFA' },
-  aiDismissBtn: { marginTop: spacing.sm },
-  aiDismissBtnText: { fontFamily: fonts.primary.regular, fontSize: 12, color: colors.muted },
+  clampSummaryBtnText: { fontFamily: fonts.primary.medium, fontSize: 12, color: colors.clamp },
+  clampDismissBtn: { marginTop: spacing.sm },
+  clampDismissBtnText: { fontFamily: fonts.primary.regular, fontSize: 12, color: colors.muted },
 });

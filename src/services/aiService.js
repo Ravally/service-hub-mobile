@@ -26,7 +26,7 @@ async function callAI(action, input) {
   });
 
   const json = await res.json();
-  if (!res.ok) throw new Error(json.error?.message || 'AI request failed');
+  if (!res.ok) throw new Error(json.error?.message || 'Clamp request failed');
   return json.result?.result || json.result || '';
 }
 

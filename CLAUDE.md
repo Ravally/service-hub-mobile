@@ -6,7 +6,16 @@ Native mobile companion for the Scaffld field service management platform.
 
 ## Clamp
 
-Before starting ANY task that touches AI features, read [CLAMP.md](CLAMP.md) first. It is the single source of truth for all AI integration points, the Cloud Function contract, UI patterns, and rules. Do not guess — read CLAMP.md.
+Before starting ANY task that touches AI features, read [CLAMP.md](CLAMP.md) first. It is the single source of truth for Clamp — Scaffld's AI assistant.
+
+- **Colour:** Amber `#F59E0B` — never purple, never app teal
+- **Icon:** `<ClampIcon />` via `react-native-svg` — never sparkle emoji (✨)
+- **Copy:** "Ask Clamp" / "Clamp Improve" — never "AI Assist"
+- **Loading:** "Clamp is working..." — never "Generating..."
+- **Components:** `src/components/clamp/` — `ClampButton`, `ClampResultPreview`
+- **Results:** Always preview before applying — bottom sheet on mobile
+- **Voice:** No first-person, no chatbot tone, no emoji in AI output
+- **Haptics:** `expo-haptics` on generate trigger and result ready
 
 ## Key Rules
 

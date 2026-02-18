@@ -76,7 +76,7 @@ export default function QuoteCreateScreen({ route, navigation }) {
       const parsed = JSON.parse(result);
       if (Array.isArray(parsed)) setAiItems(parsed);
     } catch {
-      showToast('AI generation failed', 'error');
+      showToast('Clamp generation failed', 'error');
     } finally {
       setAiLoading(false);
     }
@@ -196,11 +196,11 @@ export default function QuoteCreateScreen({ route, navigation }) {
       <Text style={styles.sectionLabel}>TITLE</Text>
       <Input placeholder="Quote title" value={title} onChangeText={setTitle} />
 
-      {/* AI Quote Writer */}
-      <Card style={styles.aiCard}>
-        <View style={styles.aiHeader}>
-          <Ionicons name="sparkles" size={16} color="#A78BFA" />
-          <Text style={styles.aiTitle}>AI Quote Writer</Text>
+      {/* Clamp Quote Writer */}
+      <Card style={styles.clampCard}>
+        <View style={styles.clampHeader}>
+          <Ionicons name="code-slash-outline" size={16} color={colors.clamp} />
+          <Text style={styles.clampTitle}>Clamp Quote Writer</Text>
         </View>
         <TextInput
           style={styles.aiInput}
@@ -212,34 +212,34 @@ export default function QuoteCreateScreen({ route, navigation }) {
           numberOfLines={2}
         />
         <TouchableOpacity
-          style={[styles.aiBtn, (!aiPrompt.trim() || aiLoading) && styles.aiBtnDisabled]}
+          style={[styles.clampBtn, (!aiPrompt.trim() || aiLoading) && styles.clampBtnDisabled]}
           onPress={handleAiGenerate}
           disabled={!aiPrompt.trim() || aiLoading}
           activeOpacity={0.7}
         >
           {aiLoading ? (
-            <ActivityIndicator size="small" color="#A78BFA" />
+            <ActivityIndicator size="small" color={colors.clamp} />
           ) : (
             <>
-              <Ionicons name="sparkles" size={14} color="#A78BFA" />
-              <Text style={styles.aiBtnText}>Generate Line Items</Text>
+              <Ionicons name="code-slash-outline" size={14} color={colors.clamp} />
+              <Text style={styles.clampBtnText}>Ask Clamp</Text>
             </>
           )}
         </TouchableOpacity>
         {aiItems && (
-          <View style={styles.aiResults}>
+          <View style={styles.clampResults}>
             {aiItems.map((item, i) => (
-              <View key={i} style={styles.aiResultRow}>
-                <Text style={styles.aiResultName} numberOfLines={2}>{item.description}</Text>
-                <Text style={styles.aiResultPrice}>{item.quantity}x ${item.unitPrice}</Text>
+              <View key={i} style={styles.clampResultRow}>
+                <Text style={styles.clampResultName} numberOfLines={2}>{item.description}</Text>
+                <Text style={styles.clampResultPrice}>{item.quantity}x ${item.unitPrice}</Text>
               </View>
             ))}
-            <View style={styles.aiActionsRow}>
-              <TouchableOpacity style={styles.aiAcceptBtn} onPress={applyAiItems} activeOpacity={0.7}>
-                <Text style={styles.aiAcceptText}>Add All to Quote</Text>
+            <View style={styles.clampActionsRow}>
+              <TouchableOpacity style={styles.clampAcceptBtn} onPress={applyAiItems} activeOpacity={0.7}>
+                <Text style={styles.clampAcceptText}>Add All to Quote</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => setAiItems(null)} activeOpacity={0.7}>
-                <Text style={styles.aiDismissText}>Dismiss</Text>
+                <Text style={styles.clampDismissText}>Dismiss</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -398,33 +398,33 @@ const styles = StyleSheet.create({
   saveRow: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.lg },
   saveBtn: { flex: 1 },
 
-  // AI Quote Writer
-  aiCard: { marginTop: spacing.md, borderColor: 'rgba(167,139,250,0.25)' },
-  aiHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: spacing.sm },
-  aiTitle: { fontFamily: fonts.primary.semiBold, fontSize: 14, color: '#A78BFA' },
+  // Clamp Quote Writer
+  clampCard: { marginTop: spacing.md, borderColor: colors.clampBorder },
+  clampHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: spacing.sm },
+  clampTitle: { fontFamily: fonts.primary.semiBold, fontSize: 14, color: colors.clamp },
   aiInput: {
     backgroundColor: colors.midnight, borderRadius: 10, borderWidth: 1, borderColor: colors.slate,
     paddingHorizontal: spacing.md, paddingVertical: 10, color: colors.white,
     fontFamily: fonts.primary.regular, fontSize: 14, minHeight: 56, textAlignVertical: 'top',
   },
-  aiBtn: {
+  clampBtn: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6,
     marginTop: spacing.sm, paddingVertical: 10, minHeight: 44, borderRadius: 8,
-    borderWidth: 1, borderColor: 'rgba(167,139,250,0.3)', backgroundColor: 'rgba(167,139,250,0.08)',
+    borderWidth: 1, borderColor: colors.clampBorder, backgroundColor: colors.clampSoft,
   },
-  aiBtnDisabled: { opacity: 0.5 },
-  aiBtnText: { fontFamily: fonts.primary.medium, fontSize: 13, color: '#A78BFA' },
-  aiResults: { marginTop: spacing.sm, borderTopWidth: 1, borderTopColor: colors.borderSubtle, paddingTop: spacing.sm },
-  aiResultRow: {
+  clampBtnDisabled: { opacity: 0.5 },
+  clampBtnText: { fontFamily: fonts.primary.medium, fontSize: 13, color: colors.clamp },
+  clampResults: { marginTop: spacing.sm, borderTopWidth: 1, borderTopColor: colors.borderSubtle, paddingTop: spacing.sm },
+  clampResultRow: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
     paddingVertical: 6, borderBottomWidth: 1, borderBottomColor: colors.borderSubtle,
   },
-  aiResultName: { flex: 1, fontFamily: fonts.primary.regular, fontSize: 13, color: colors.silver, marginRight: spacing.sm },
-  aiResultPrice: { fontFamily: fonts.data.regular, fontSize: 13, color: colors.scaffld },
-  aiActionsRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, marginTop: spacing.sm },
-  aiAcceptBtn: {
-    backgroundColor: 'rgba(167,139,250,0.15)', borderRadius: 8, paddingHorizontal: 14, paddingVertical: 8, minHeight: 36,
+  clampResultName: { flex: 1, fontFamily: fonts.primary.regular, fontSize: 13, color: colors.silver, marginRight: spacing.sm },
+  clampResultPrice: { fontFamily: fonts.data.regular, fontSize: 13, color: colors.scaffld },
+  clampActionsRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, marginTop: spacing.sm },
+  clampAcceptBtn: {
+    backgroundColor: colors.clampHover, borderRadius: 8, paddingHorizontal: 14, paddingVertical: 8, minHeight: 36,
   },
-  aiAcceptText: { fontFamily: fonts.primary.semiBold, fontSize: 13, color: '#A78BFA' },
-  aiDismissText: { fontFamily: fonts.primary.regular, fontSize: 13, color: colors.muted },
+  clampAcceptText: { fontFamily: fonts.primary.semiBold, fontSize: 13, color: colors.clamp },
+  clampDismissText: { fontFamily: fonts.primary.regular, fontSize: 13, color: colors.muted },
 });
