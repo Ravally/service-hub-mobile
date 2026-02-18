@@ -4,6 +4,10 @@ Native mobile companion for the Scaffld field service management platform.
 **Stack:** Expo SDK 54 | React Native 0.81.5 | Firebase 12.3 | Zustand 5.0 | React Navigation 7
 **Web App:** `../service-hub-app` (React 18 + Vite + Tailwind)
 
+## Clamp
+
+Before starting ANY task that touches AI features, read [CLAMP.md](CLAMP.md) first. It is the single source of truth for all AI integration points, the Cloud Function contract, UI patterns, and rules. Do not guess — read CLAMP.md.
+
 ## Key Rules
 
 - **Multi-tenant:** Every Firestore path is `users/{userId}/{collection}` — use `userCollection()` and `userDoc()` helpers
