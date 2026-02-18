@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, ScrollView, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TextInput, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useQuotesStore } from '../../stores/quotesStore';
@@ -9,6 +9,7 @@ import { useUiStore } from '../../stores/uiStore';
 import { colors, typeScale, fonts, spacing } from '../../theme';
 import { formatCurrency } from '../../utils';
 import { getIsConnected } from '../../services/networkMonitor';
+import { generateQuote } from '../../services/aiService';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
@@ -29,6 +30,9 @@ export default function QuoteCreateScreen({ route, navigation }) {
   const [taxRate, setTaxRate] = useState('15');
   const [notes, setNotes] = useState('');
   const [saving, setSaving] = useState(false);
+  const [aiPrompt, setAiPrompt] = useState('');
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiItems, setAiItems] = useState(null);
 
   const selectedClient = useMemo(
     () => clients.find((c) => c.id === clientId),
@@ -62,6 +66,38 @@ export default function QuoteCreateScreen({ route, navigation }) {
   const removeLineItem = (index) => {
     if (lineItems.length <= 1) return;
     setLineItems((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleAiGenerate = async () => {
+    if (!aiPrompt.trim()) return;
+    setAiLoading(true);
+    try {
+      const result = await generateQuote(aiPrompt, { clientName: selectedClient?.name });
+      const parsed = JSON.parse(result);
+      if (Array.isArray(parsed)) setAiItems(parsed);
+    } catch {
+      showToast('AI generation failed', 'error');
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  const applyAiItems = () => {
+    if (!aiItems) return;
+    const newItems = aiItems.map((item) => ({
+      type: 'line_item',
+      name: item.description || '',
+      qty: item.quantity || 1,
+      price: item.unitPrice || 0,
+      description: '',
+    }));
+    setLineItems((prev) => {
+      const existing = prev.filter((li) => li.name.trim());
+      return existing.length > 0 ? [...existing, ...newItems] : newItems;
+    });
+    setAiItems(null);
+    setAiPrompt('');
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
   };
 
   const handleSave = async (status = 'Draft') => {
@@ -159,6 +195,56 @@ export default function QuoteCreateScreen({ route, navigation }) {
       {/* Title */}
       <Text style={styles.sectionLabel}>TITLE</Text>
       <Input placeholder="Quote title" value={title} onChangeText={setTitle} />
+
+      {/* AI Quote Writer */}
+      <Card style={styles.aiCard}>
+        <View style={styles.aiHeader}>
+          <Ionicons name="sparkles" size={16} color="#A78BFA" />
+          <Text style={styles.aiTitle}>AI Quote Writer</Text>
+        </View>
+        <TextInput
+          style={styles.aiInput}
+          placeholder="Describe the work needed..."
+          placeholderTextColor={colors.muted}
+          value={aiPrompt}
+          onChangeText={setAiPrompt}
+          multiline
+          numberOfLines={2}
+        />
+        <TouchableOpacity
+          style={[styles.aiBtn, (!aiPrompt.trim() || aiLoading) && styles.aiBtnDisabled]}
+          onPress={handleAiGenerate}
+          disabled={!aiPrompt.trim() || aiLoading}
+          activeOpacity={0.7}
+        >
+          {aiLoading ? (
+            <ActivityIndicator size="small" color="#A78BFA" />
+          ) : (
+            <>
+              <Ionicons name="sparkles" size={14} color="#A78BFA" />
+              <Text style={styles.aiBtnText}>Generate Line Items</Text>
+            </>
+          )}
+        </TouchableOpacity>
+        {aiItems && (
+          <View style={styles.aiResults}>
+            {aiItems.map((item, i) => (
+              <View key={i} style={styles.aiResultRow}>
+                <Text style={styles.aiResultName} numberOfLines={2}>{item.description}</Text>
+                <Text style={styles.aiResultPrice}>{item.quantity}x ${item.unitPrice}</Text>
+              </View>
+            ))}
+            <View style={styles.aiActionsRow}>
+              <TouchableOpacity style={styles.aiAcceptBtn} onPress={applyAiItems} activeOpacity={0.7}>
+                <Text style={styles.aiAcceptText}>Add All to Quote</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setAiItems(null)} activeOpacity={0.7}>
+                <Text style={styles.aiDismissText}>Dismiss</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+      </Card>
 
       {/* Line Items */}
       <Text style={[styles.sectionLabel, { marginTop: spacing.md }]}>LINE ITEMS</Text>
@@ -311,4 +397,34 @@ const styles = StyleSheet.create({
   totalFinalValue: { fontFamily: fonts.data.medium, fontSize: 18, color: colors.scaffld },
   saveRow: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.lg },
   saveBtn: { flex: 1 },
+
+  // AI Quote Writer
+  aiCard: { marginTop: spacing.md, borderColor: 'rgba(167,139,250,0.25)' },
+  aiHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: spacing.sm },
+  aiTitle: { fontFamily: fonts.primary.semiBold, fontSize: 14, color: '#A78BFA' },
+  aiInput: {
+    backgroundColor: colors.midnight, borderRadius: 10, borderWidth: 1, borderColor: colors.slate,
+    paddingHorizontal: spacing.md, paddingVertical: 10, color: colors.white,
+    fontFamily: fonts.primary.regular, fontSize: 14, minHeight: 56, textAlignVertical: 'top',
+  },
+  aiBtn: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6,
+    marginTop: spacing.sm, paddingVertical: 10, minHeight: 44, borderRadius: 8,
+    borderWidth: 1, borderColor: 'rgba(167,139,250,0.3)', backgroundColor: 'rgba(167,139,250,0.08)',
+  },
+  aiBtnDisabled: { opacity: 0.5 },
+  aiBtnText: { fontFamily: fonts.primary.medium, fontSize: 13, color: '#A78BFA' },
+  aiResults: { marginTop: spacing.sm, borderTopWidth: 1, borderTopColor: colors.borderSubtle, paddingTop: spacing.sm },
+  aiResultRow: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    paddingVertical: 6, borderBottomWidth: 1, borderBottomColor: colors.borderSubtle,
+  },
+  aiResultName: { flex: 1, fontFamily: fonts.primary.regular, fontSize: 13, color: colors.silver, marginRight: spacing.sm },
+  aiResultPrice: { fontFamily: fonts.data.regular, fontSize: 13, color: colors.scaffld },
+  aiActionsRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, marginTop: spacing.sm },
+  aiAcceptBtn: {
+    backgroundColor: 'rgba(167,139,250,0.15)', borderRadius: 8, paddingHorizontal: 14, paddingVertical: 8, minHeight: 36,
+  },
+  aiAcceptText: { fontFamily: fonts.primary.semiBold, fontSize: 13, color: '#A78BFA' },
+  aiDismissText: { fontFamily: fonts.primary.regular, fontSize: 13, color: colors.muted },
 });

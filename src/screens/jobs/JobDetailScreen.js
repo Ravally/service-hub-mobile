@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useRef, useCallback } from 'react';
 import {
-  View, Text, ScrollView, TouchableOpacity, RefreshControl, StyleSheet,
+  View, Text, ScrollView, TouchableOpacity, RefreshControl, ActivityIndicator, StyleSheet,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useJobsStore } from '../../stores/jobsStore';
@@ -21,6 +21,7 @@ import Card from '../../components/ui/Card';
 import ActionSheet from '../../components/common/ActionSheet';
 import ChecklistSection from '../../components/forms/ChecklistSection';
 import OnMyWayButton from '../../components/jobs/OnMyWayButton';
+import { generateJobSummary } from '../../services/aiService';
 
 const STATUS_FLOW = { Scheduled: 'In Progress', 'In Progress': 'Completed' };
 const STATUS_CTA = {
@@ -429,6 +430,20 @@ function DetailsTab({ job, lineItems, totals, laborEntries, navigation, jobId })
 function NotesTab({ job }) {
   const notes = job.notes || job.description || '';
   const internalNotes = job.internalNotes || '';
+  const [aiSummary, setAiSummary] = useState(null);
+  const [aiLoading, setAiLoading] = useState(false);
+
+  const handleGenerateSummary = async () => {
+    setAiLoading(true);
+    try {
+      const result = await generateJobSummary(job);
+      setAiSummary(result);
+    } catch {
+      setAiSummary('Failed to generate summary. Please try again.');
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   return (
     <View>
@@ -446,6 +461,36 @@ function NotesTab({ job }) {
           <Text style={styles.notesText}>{internalNotes}</Text>
         </Card>
       ) : null}
+      <Card style={[styles.section, styles.aiSummaryCard]}>
+        <View style={styles.aiSummaryHeader}>
+          <View style={styles.aiSummaryLabel}>
+            <Ionicons name="sparkles" size={14} color="#A78BFA" />
+            <Text style={styles.aiSummaryTitle}>AI Summary</Text>
+          </View>
+          {!aiSummary && (
+            <TouchableOpacity
+              style={styles.aiSummaryBtn}
+              onPress={handleGenerateSummary}
+              disabled={aiLoading}
+              activeOpacity={0.7}
+            >
+              {aiLoading ? (
+                <ActivityIndicator size="small" color="#A78BFA" />
+              ) : (
+                <Text style={styles.aiSummaryBtnText}>Generate</Text>
+              )}
+            </TouchableOpacity>
+          )}
+        </View>
+        {aiSummary && (
+          <>
+            <Text style={styles.notesText}>{aiSummary}</Text>
+            <TouchableOpacity onPress={() => setAiSummary(null)} style={styles.aiDismissBtn}>
+              <Text style={styles.aiDismissBtnText}>Dismiss</Text>
+            </TouchableOpacity>
+          </>
+        )}
+      </Card>
     </View>
   );
 }
@@ -783,4 +828,17 @@ const styles = StyleSheet.create({
     color: colors.silver,
     lineHeight: 22,
   },
+
+  // AI Summary
+  aiSummaryCard: { borderColor: 'rgba(167,139,250,0.2)' },
+  aiSummaryHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.sm },
+  aiSummaryLabel: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  aiSummaryTitle: { fontFamily: fonts.primary.semiBold, fontSize: 13, color: '#A78BFA' },
+  aiSummaryBtn: {
+    backgroundColor: 'rgba(167,139,250,0.1)', borderRadius: 8, borderWidth: 1, borderColor: 'rgba(167,139,250,0.25)',
+    paddingHorizontal: 12, paddingVertical: 6, minHeight: 32, justifyContent: 'center',
+  },
+  aiSummaryBtnText: { fontFamily: fonts.primary.medium, fontSize: 12, color: '#A78BFA' },
+  aiDismissBtn: { marginTop: spacing.sm },
+  aiDismissBtnText: { fontFamily: fonts.primary.regular, fontSize: 12, color: colors.muted },
 });

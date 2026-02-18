@@ -4,7 +4,9 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useAuthStore } from '../../stores/authStore';
 import { useUiStore } from '../../stores/uiStore';
+import { useJobsStore } from '../../stores/jobsStore';
 import { sendSmsAndLog } from '../../services/smsService';
+import { offlineUpdateUserDoc } from '../../services/offlineFirestore';
 import { colors, typeScale, fonts, spacing } from '../../theme';
 
 const ETA_OPTIONS = [5, 10, 15, 20, 30, 45, 60];
@@ -36,7 +38,22 @@ export default function OnMyWayButton({ client, job }) {
     return parts.join('\n');
   };
 
-  const handleSend = async () => {
+  const handleSendViaScaffld = async () => {
+    setVisible(false);
+    try {
+      await offlineUpdateUserDoc(userId, 'jobs', job.id, {
+        onMyWay: true,
+        onMyWayTechName: workerName,
+        onMyWayEta: selectedMinutes,
+      });
+      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      showToast('On My Way sent via Scaffld', 'success');
+    } catch {
+      showToast('Failed to send notification', 'error');
+    }
+  };
+
+  const handleSendViaSms = async () => {
     setVisible(false);
     try {
       const message = buildMessage(selectedMinutes);
@@ -102,10 +119,16 @@ export default function OnMyWayButton({ client, job }) {
               <Text style={styles.previewText}>{buildMessage(selectedMinutes)}</Text>
             </View>
 
-            {/* Send */}
-            <TouchableOpacity style={styles.sendBtn} onPress={handleSend} activeOpacity={0.8}>
-              <Ionicons name="chatbubble-outline" size={18} color={colors.white} />
-              <Text style={styles.sendText}>Send SMS</Text>
+            {/* Send via Scaffld (triggers Cloud Function / Twilio) */}
+            <TouchableOpacity style={styles.sendBtn} onPress={handleSendViaScaffld} activeOpacity={0.8}>
+              <Ionicons name="paper-plane-outline" size={18} color={colors.white} />
+              <Text style={styles.sendText}>Send via Scaffld</Text>
+            </TouchableOpacity>
+            <Text style={styles.orText}>or</Text>
+            {/* Fallback: open native SMS app */}
+            <TouchableOpacity style={styles.smsBtn} onPress={handleSendViaSms} activeOpacity={0.8}>
+              <Ionicons name="chatbubble-outline" size={16} color={colors.scaffld} />
+              <Text style={styles.smsBtnText}>Open SMS App</Text>
             </TouchableOpacity>
           </View>
         </TouchableOpacity>
@@ -157,4 +180,11 @@ const styles = StyleSheet.create({
     paddingVertical: 12, paddingHorizontal: spacing.lg,
   },
   sendText: { fontFamily: fonts.primary.semiBold, fontSize: 16, color: colors.white },
+  orText: { fontFamily: fonts.primary.regular, fontSize: 13, color: colors.muted, textAlign: 'center', marginVertical: 6 },
+  smsBtn: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: spacing.sm,
+    borderWidth: 1, borderColor: colors.slate, borderRadius: 10, minHeight: 44,
+    paddingVertical: 10, paddingHorizontal: spacing.lg,
+  },
+  smsBtnText: { fontFamily: fonts.primary.medium, fontSize: 14, color: colors.scaffld },
 });
