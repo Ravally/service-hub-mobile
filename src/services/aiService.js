@@ -30,6 +30,16 @@ async function callAI(action, input) {
   return json.result?.result || json.result || '';
 }
 
+/** Strip markdown code fences (```json ... ```) that the model sometimes wraps around JSON. */
+export function stripCodeFences(text) {
+  if (typeof text !== 'string') return text;
+  const trimmed = text.trim();
+  if (trimmed.startsWith('```')) {
+    return trimmed.replace(/^```[\w]*\n?/, '').replace(/\n?```$/, '').trim();
+  }
+  return trimmed;
+}
+
 /**
  * Generate quote line items from a job description.
  * @param {string} description - Free-text description of the work

@@ -9,7 +9,7 @@ import { useUiStore } from '../../stores/uiStore';
 import { colors, typeScale, fonts, spacing } from '../../theme';
 import { formatCurrency } from '../../utils';
 import { getIsConnected } from '../../services/networkMonitor';
-import { generateQuote } from '../../services/aiService';
+import { generateQuote, stripCodeFences } from '../../services/aiService';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
@@ -73,7 +73,7 @@ export default function QuoteCreateScreen({ route, navigation }) {
     setAiLoading(true);
     try {
       const result = await generateQuote(aiPrompt, { clientName: selectedClient?.name });
-      const parsed = JSON.parse(result);
+      const parsed = JSON.parse(stripCodeFences(result));
       if (Array.isArray(parsed)) setAiItems(parsed);
     } catch {
       showToast('Clamp generation failed', 'error');
