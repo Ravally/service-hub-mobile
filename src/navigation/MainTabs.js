@@ -1,7 +1,6 @@
 import React, { useRef, useCallback } from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, fonts, shadows } from '../theme';
 import { mediumImpact } from '../utils/haptics';
@@ -11,6 +10,7 @@ import SearchStack from './SearchStack';
 import MoreStack from './MoreStack';
 import QuickCreateSheet from '../components/common/QuickCreateSheet';
 import ClampIcon from '../components/clamp/ClampIcon';
+import { navigationRef } from './navigationRef';
 
 const Tab = createBottomTabNavigator();
 
@@ -93,12 +93,10 @@ export default function MainTabs() {
 }
 
 function ClampFAB() {
-  const navigation = useNavigation();
-
   const handlePress = useCallback(() => {
     mediumImpact();
-    navigation.navigate('More', { screen: 'ClampChat' });
-  }, [navigation]);
+    navigationRef.current?.navigate('More', { screen: 'ClampChat' });
+  }, []);
 
   return (
     <TouchableOpacity style={styles.clampFab} onPress={handlePress} activeOpacity={0.85}>
