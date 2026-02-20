@@ -24,7 +24,7 @@ export default function QuoteCreateScreen({ route, navigation }) {
 
   const [clientId, setClientId] = useState(preselectedClientId || '');
   const [clientSearch, setClientSearch] = useState('');
-  const [showClientPicker, setShowClientPicker] = useState(!preselectedClientId);
+  const [showClientPicker, setShowClientPicker] = useState(false);
   const [title, setTitle] = useState('');
   const [lineItems, setLineItems] = useState([{ ...EMPTY_LINE_ITEM }]);
   const [taxRate, setTaxRate] = useState('15');
@@ -152,13 +152,15 @@ export default function QuoteCreateScreen({ route, navigation }) {
     <ScrollView style={styles.container} contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
       {/* Client Selection */}
       <Text style={styles.sectionLabel}>CLIENT</Text>
-      {selectedClient && !showClientPicker ? (
+      {!showClientPicker ? (
         <TouchableOpacity
           style={styles.selectedClient}
           onPress={() => setShowClientPicker(true)}
           activeOpacity={0.7}
         >
-          <Text style={styles.selectedClientName}>{selectedClient.name}</Text>
+          <Text style={selectedClient ? styles.selectedClientName : styles.placeholderText}>
+            {selectedClient ? selectedClient.name : 'Select a client'}
+          </Text>
           <Ionicons name="chevron-down" size={18} color={colors.muted} />
         </TouchableOpacity>
       ) : (
@@ -171,7 +173,6 @@ export default function QuoteCreateScreen({ route, navigation }) {
               placeholderTextColor={colors.muted}
               value={clientSearch}
               onChangeText={setClientSearch}
-              autoFocus={!preselectedClientId}
             />
           </View>
           {filteredClients.map((c) => (
@@ -364,6 +365,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md, paddingVertical: 14, minHeight: 48, marginBottom: spacing.md,
   },
   selectedClientName: { ...typeScale.body, color: colors.white },
+  placeholderText: { ...typeScale.body, color: colors.muted },
   clientPicker: { marginBottom: spacing.md, maxHeight: 280 },
   clientSearchRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.sm },
   clientSearchInput: { flex: 1, ...typeScale.bodySm, color: colors.white },

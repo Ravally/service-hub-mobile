@@ -35,7 +35,7 @@ export default function ExpenseCreateScreen({ route, navigation }) {
 
   const [jobId, setJobId] = useState(preselectedJobId || '');
   const [jobSearch, setJobSearch] = useState('');
-  const [showJobPicker, setShowJobPicker] = useState(!preselectedJobId);
+  const [showJobPicker, setShowJobPicker] = useState(false);
   const [title, setTitle] = useState('');
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('materials');
@@ -142,13 +142,15 @@ export default function ExpenseCreateScreen({ route, navigation }) {
     >
       {/* Job Picker */}
       <Text style={styles.sectionLabel}>JOB</Text>
-      {selectedJob && !showJobPicker ? (
+      {!showJobPicker ? (
         <TouchableOpacity
           style={styles.selectedRow}
           onPress={() => setShowJobPicker(true)}
           activeOpacity={0.7}
         >
-          <Text style={styles.selectedText} numberOfLines={1}>{jobLabel(selectedJob)}</Text>
+          <Text style={selectedJob ? styles.selectedText : styles.placeholderText} numberOfLines={1}>
+            {selectedJob ? jobLabel(selectedJob) : 'Select a job'}
+          </Text>
           <Ionicons name="chevron-down" size={18} color={colors.muted} />
         </TouchableOpacity>
       ) : (
@@ -161,7 +163,6 @@ export default function ExpenseCreateScreen({ route, navigation }) {
               placeholderTextColor={colors.muted}
               value={jobSearch}
               onChangeText={setJobSearch}
-              autoFocus={!preselectedJobId}
             />
           </View>
           {filteredJobs.map((j) => (
@@ -301,6 +302,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md, paddingVertical: 14, minHeight: 48, marginBottom: spacing.md,
   },
   selectedText: { ...typeScale.body, color: colors.white, flex: 1, marginRight: spacing.sm },
+  placeholderText: { ...typeScale.body, color: colors.muted, flex: 1, marginRight: spacing.sm },
   picker: { marginBottom: spacing.md, maxHeight: 280 },
   searchRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.sm },
   searchInput: { flex: 1, ...typeScale.bodySm, color: colors.white },
