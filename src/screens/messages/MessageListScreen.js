@@ -7,11 +7,23 @@ import { colors, typeScale, fonts, spacing } from '../../theme';
 import { getInitials } from '../../utils';
 
 export default function MessageListScreen({ navigation }) {
-  const conversations = useMessagesStore((s) => s.getConversations());
   const messages = useMessagesStore((s) => s.messages);
   const loading = useMessagesStore((s) => s.loading);
 
   const enriched = useMemo(() => {
+    // Derive conversations from messages (instead of selector that returns new array)
+    const map = new Map();
+    for (const m of messages) {
+      if (!m.clientId) continue;
+      const existing = map.get(m.clientId);
+      if (!existing || new Date(m.sentAt) > new Date(existing.sentAt)) {
+        map.set(m.clientId, m);
+      }
+    }
+    const conversations = Array.from(map.entries())
+      .map(([clientId, lastMessage]) => ({ clientId, lastMessage }))
+      .sort((a, b) => new Date(b.lastMessage.sentAt) - new Date(a.lastMessage.sentAt));
+
     return conversations.map((conv) => {
       const client = useClientsStore.getState().getClientById(conv.clientId);
       const unread = messages.filter(
@@ -19,7 +31,7 @@ export default function MessageListScreen({ navigation }) {
       ).length;
       return { ...conv, client, unread };
     });
-  }, [conversations, messages]);
+  }, [messages]);
 
   const formatTime = (dateStr) => {
     if (!dateStr) return '';
