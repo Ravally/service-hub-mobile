@@ -373,14 +373,14 @@ const styles = StyleSheet.create({
   chipScroll: { flexGrow: 0 },
   chipRow: {
     paddingHorizontal: spacing.md,
-    paddingTop: spacing.sm,
-    paddingBottom: 4,
+    paddingTop: spacing.md,
+    paddingBottom: spacing.sm,
     gap: spacing.xs,
     alignItems: 'center',
   },
   subChipRow: {
     paddingHorizontal: spacing.md,
-    paddingTop: 4,
+    paddingTop: spacing.xs,
     paddingBottom: spacing.sm,
     gap: spacing.xs,
     alignItems: 'center',
@@ -401,7 +401,7 @@ const styles = StyleSheet.create({
   },
   chipText: { fontFamily: fonts.primary.medium, fontSize: 13, color: colors.muted },
   chipTextActive: { color: colors.scaffld },
-  list: { paddingHorizontal: spacing.md, paddingBottom: spacing.xl },
+  list: { paddingHorizontal: spacing.md, paddingTop: spacing.sm, paddingBottom: spacing.xl },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
