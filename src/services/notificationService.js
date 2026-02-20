@@ -1,5 +1,6 @@
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
+import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from './firebase';
@@ -46,7 +47,10 @@ export async function registerForPushNotifications(userId) {
       });
     }
 
-    const tokenData = await Notifications.getExpoPushTokenAsync();
+    const projectId = Constants.expoConfig?.extra?.eas?.projectId;
+    const tokenData = await Notifications.getExpoPushTokenAsync(
+      projectId ? { projectId } : undefined,
+    );
     const token = tokenData.data;
 
     // Store token in Firestore
@@ -59,7 +63,7 @@ export async function registerForPushNotifications(userId) {
 
     return token;
   } catch (err) {
-    console.error('Failed to register push notifications:', err);
+    console.warn('Push notifications unavailable:', err.message);
     return null;
   }
 }
