@@ -98,9 +98,14 @@ function ClampFAB() {
   useEffect(() => {
     const unsubscribe = navigationRef.current?.addListener('state', () => {
       const state = navigationRef.current?.getRootState();
-      // Traverse: Main > More tab > ClampChat screen
       const mainRoute = state?.routes?.find((r) => r.name === 'Main');
       const tabState = mainRoute?.state;
+      // Only hide when the active tab IS More AND the screen is ClampChat
+      const activeTabName = tabState?.routes?.[tabState.index]?.name;
+      if (activeTabName !== 'More') {
+        setHidden(false);
+        return;
+      }
       const moreTab = tabState?.routes?.find((r) => r.name === 'More');
       const moreState = moreTab?.state;
       const currentScreen = moreState?.routes?.[moreState.index]?.name;
@@ -111,7 +116,7 @@ function ClampFAB() {
 
   const handlePress = useCallback(() => {
     mediumImpact();
-    navigationRef.current?.navigate('More', { screen: 'ClampChat' });
+    navigationRef.current?.navigate('More', { screen: 'ClampChat', initial: false });
   }, []);
 
   if (hidden) return null;

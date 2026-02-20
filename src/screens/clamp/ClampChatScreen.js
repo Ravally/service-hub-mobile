@@ -166,32 +166,30 @@ export default function ClampChatScreen() {
           </>
         )}
 
-        {/* Input bar — always visible once conversation started */}
-        {!showWelcome && (
-          <View style={styles.inputBar}>
-            <TextInput
-              style={styles.input}
-              value={text}
-              onChangeText={setText}
-              placeholder="Ask Clamp..."
-              placeholderTextColor={colors.muted}
-              multiline
-              maxLength={2000}
-              editable={!isThinking}
-              returnKeyType="send"
-              blurOnSubmit={false}
-              onSubmitEditing={() => handleSend()}
-            />
-            <TouchableOpacity
-              style={[styles.sendBtn, (!text.trim() || isThinking) && styles.sendBtnDisabled]}
-              onPress={() => handleSend()}
-              disabled={!text.trim() || isThinking}
-              activeOpacity={0.7}
-            >
-              <Ionicons name="send" size={18} color={colors.midnight} />
-            </TouchableOpacity>
-          </View>
-        )}
+        {/* Input bar — always visible */}
+        <View style={styles.inputBar}>
+          <TextInput
+            style={styles.input}
+            value={text}
+            onChangeText={setText}
+            placeholder="Ask Clamp..."
+            placeholderTextColor={colors.muted}
+            multiline
+            maxLength={2000}
+            editable={!isThinking}
+            returnKeyType="send"
+            blurOnSubmit={false}
+            onSubmitEditing={() => handleSend()}
+          />
+          <TouchableOpacity
+            style={[styles.sendBtn, (!text.trim() || isThinking) && styles.sendBtnDisabled]}
+            onPress={() => handleSend()}
+            disabled={!text.trim() || isThinking}
+            activeOpacity={0.7}
+          >
+            <Ionicons name="send" size={18} color={colors.midnight} />
+          </TouchableOpacity>
+        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
