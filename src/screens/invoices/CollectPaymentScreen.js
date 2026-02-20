@@ -14,6 +14,7 @@ import { generatePaymentLink } from '../../services/paymentService';
 import { getIsConnected } from '../../services/networkMonitor';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
+import TapToPaySection from '../../components/payments/TapToPaySection';
 
 export default function CollectPaymentScreen({ route, navigation }) {
   const { invoiceId } = route.params || {};
@@ -166,25 +167,13 @@ export default function CollectPaymentScreen({ route, navigation }) {
         )}
       </Card>
 
-      {/* Tap to Pay (future) */}
-      <Text style={[styles.sectionLabel, { marginTop: spacing.md }]}>TAP TO PAY</Text>
-      <Card style={[styles.section, styles.disabledSection]}>
-        <View style={styles.tapToPayRow}>
-          <Ionicons name="phone-portrait-outline" size={24} color={colors.muted} />
-          <View style={styles.tapToPayInfo}>
-            <Text style={styles.tapToPayTitle}>Contactless Payment</Text>
-            <Text style={styles.tapToPayDesc}>
-              Accept card payments using your phone's NFC. Requires Stripe Terminal setup.
-            </Text>
-          </View>
-        </View>
-        <Button
-          title="Coming Soon"
-          variant="ghost"
-          disabled
-          style={{ marginTop: spacing.sm }}
-        />
-      </Card>
+      {/* Tap to Pay */}
+      <TapToPaySection
+        userId={userId}
+        invoiceId={invoiceId}
+        amountDueCents={amountDue}
+        onPaymentComplete={() => navigation.goBack()}
+      />
 
       {/* Record Manual Payment */}
       <Text style={[styles.sectionLabel, { marginTop: spacing.md }]}>RECORD MANUAL PAYMENT</Text>
@@ -242,11 +231,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12, minHeight: 48,
   },
   linkBtnText: { ...typeScale.bodySm, color: colors.scaffld },
-  disabledSection: { opacity: 0.5 },
-  tapToPayRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  tapToPayInfo: { flex: 1 },
-  tapToPayTitle: { ...typeScale.body, color: colors.white, marginBottom: 4 },
-  tapToPayDesc: { ...typeScale.bodySm, color: colors.muted, lineHeight: 20 },
   manualRow: { flexDirection: 'row', alignItems: 'center', marginBottom: spacing.md },
   dollarSign: { ...typeScale.h2, color: colors.muted, marginRight: spacing.sm },
   manualInput: {

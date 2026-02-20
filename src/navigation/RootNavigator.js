@@ -2,6 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import * as Linking from 'expo-linking';
 import { useAuthStore } from '../stores/authStore';
 import { colors } from '../theme';
 import AuthStack from './AuthStack';
@@ -9,6 +10,45 @@ import MainTabs from './MainTabs';
 
 export const navigationRef = React.createRef();
 const Stack = createNativeStackNavigator();
+
+const prefix = Linking.createURL('/');
+
+const linking = {
+  prefixes: [prefix, 'scaffld://'],
+  config: {
+    screens: {
+      Main: {
+        screens: {
+          Home: {
+            screens: {
+              HomeScreen: 'home',
+              JobDetail: 'jobs/:jobId',
+              QuoteDetail: 'quotes/:quoteId',
+              InvoiceDetail: 'invoices/:invoiceId',
+              ClientDetail: 'clients/:clientId',
+              ClockInOut: 'clock',
+            },
+          },
+          Schedule: {
+            screens: {
+              ScheduleScreen: 'schedule',
+            },
+          },
+          Search: {
+            screens: {
+              SearchScreen: 'search',
+            },
+          },
+          More: {
+            screens: {
+              ClampChat: 'clamp',
+            },
+          },
+        },
+      },
+    },
+  },
+};
 
 const scaffldNavTheme = {
   dark: true,
@@ -43,7 +83,7 @@ export default function RootNavigator() {
   if (isLoading) return <SplashScreen />;
 
   return (
-    <NavigationContainer theme={scaffldNavTheme} ref={navigationRef}>
+    <NavigationContainer theme={scaffldNavTheme} ref={navigationRef} linking={linking}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {isAuthenticated ? (
           <Stack.Screen name="Main" component={MainTabs} />

@@ -13,6 +13,12 @@ import StatusPill from '../../components/common/StatusPill';
 
 const MENU_SECTIONS = [
   {
+    title: 'AI ASSISTANT',
+    items: [
+      { key: 'clamp', icon: 'construct-outline', label: 'Ask Clamp', screen: 'ClampChat', tint: 'clamp' },
+    ],
+  },
+  {
     title: 'COMMUNICATION',
     items: [
       { key: 'messages', icon: 'chatbubbles-outline', label: 'Messages', screen: 'MessageList', showBadge: true },
@@ -93,8 +99,8 @@ export default function SettingsScreen() {
                   onPress={() => navigation.navigate(item.screen)}
                   activeOpacity={0.7}
                 >
-                  <View style={styles.menuIcon}>
-                    <Ionicons name={item.icon} size={18} color={colors.scaffld} />
+                  <View style={[styles.menuIcon, item.tint === 'clamp' && styles.menuIconClamp]}>
+                    <Ionicons name={item.icon} size={18} color={item.tint === 'clamp' ? colors.clamp : colors.scaffld} />
                   </View>
                   <Text style={styles.menuLabel}>{item.label}</Text>
                   {item.showBadge && unreadCount > 0 && (
@@ -277,6 +283,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(14,165,160,0.1)',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  menuIconClamp: {
+    backgroundColor: colors.clampSoft,
   },
   menuLabel: {
     fontFamily: fonts.primary.medium,

@@ -15,6 +15,7 @@ import { mediumImpact, lightImpact, successNotification } from '../../utils/hapt
 import StatusPill from '../../components/common/StatusPill';
 import Card from '../../components/ui/Card';
 import ActionSheet from '../../components/common/ActionSheet';
+import { shareInvoicePDF } from '../../services/pdfService';
 
 const STATUS_ACTIONS = {
   Draft: [{ label: 'Send Invoice', next: 'Sent', icon: 'send-outline', variant: 'primary' }],
@@ -112,6 +113,16 @@ export default function InvoiceDetailScreen({ route, navigation }) {
 
   const moreActions = useMemo(() => {
     const items = [];
+    items.push({
+      key: 'pdf', icon: 'document-outline', label: 'Share PDF',
+      onPress: async () => {
+        try {
+          await shareInvoicePDF(invoice, client);
+        } catch {
+          showToast('Failed to generate PDF', 'error');
+        }
+      },
+    });
     if (client) {
       items.push({
         key: 'client', icon: 'person-outline', label: 'View Client',

@@ -22,7 +22,6 @@ Notifications.setNotificationHandler({
 export async function registerForPushNotifications(userId) {
   try {
     if (!Device.isDevice) {
-      console.log('Push notifications require a physical device');
       return null;
     }
 
@@ -71,8 +70,8 @@ export async function registerForPushNotifications(userId) {
  */
 export function setupNotificationHandlers(navigationRef) {
   // Foreground — notification appears as banner (handled by setNotificationHandler above)
-  const foregroundSub = Notifications.addNotificationReceivedListener((notification) => {
-    console.log('Notification received:', notification.request.content.title);
+  const foregroundSub = Notifications.addNotificationReceivedListener(() => {
+    // Foreground display handled by setNotificationHandler above
   });
 
   // Tap — navigate to relevant screen

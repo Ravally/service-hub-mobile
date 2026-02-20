@@ -1,17 +1,66 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
   KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '../../stores/authStore';
+import {
+  isBiometricAvailable, getBiometricLabel, authenticateWithBiometric,
+  saveCredentials, getStoredCredentials, isBiometricEnabled,
+} from '../../services/biometricService';
 import { colors, typeScale, fonts, spacing } from '../../theme';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [biometricLabel, setBiometricLabel] = useState(null);
+  const [biometricReady, setBiometricReady] = useState(false);
   const { signIn, error, clearError } = useAuthStore();
+
+  // Check biometric availability on mount and auto-prompt
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const available = await isBiometricAvailable();
+      const enabled = await isBiometricEnabled();
+      if (!available || !enabled || cancelled) return;
+
+      const label = await getBiometricLabel();
+      if (!cancelled) {
+        setBiometricLabel(label);
+        setBiometricReady(true);
+      }
+
+      // Auto-prompt biometric on first mount
+      handleBiometricLogin();
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  const handleBiometricLogin = async () => {
+    try {
+      setLoading(true);
+      clearError();
+      const credentials = await getStoredCredentials();
+      if (!credentials) {
+        setLoading(false);
+        return;
+      }
+      const success = await authenticateWithBiometric();
+      if (!success) {
+        setLoading(false);
+        return;
+      }
+      await signIn(credentials.email, credentials.password);
+    } catch {
+      // Biometric failed or credentials stale — fall back to password
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleLogin = async () => {
     if (!email.trim() || !password.trim()) return;
@@ -19,6 +68,11 @@ export default function LoginScreen({ navigation }) {
       setLoading(true);
       clearError();
       await signIn(email.trim(), password);
+      // On successful login, offer to save credentials for biometric
+      const available = await isBiometricAvailable();
+      if (available) {
+        await saveCredentials(email.trim(), password);
+      }
     } catch {
       // error is set in store
     } finally {
@@ -88,6 +142,22 @@ export default function LoginScreen({ navigation }) {
                 <Text style={styles.buttonText}>Sign In</Text>
               )}
             </TouchableOpacity>
+
+            {biometricReady && (
+              <TouchableOpacity
+                style={styles.biometricButton}
+                onPress={handleBiometricLogin}
+                disabled={loading}
+                activeOpacity={0.7}
+              >
+                <Ionicons
+                  name={biometricLabel === 'Face ID' ? 'scan-outline' : 'finger-print-outline'}
+                  size={22}
+                  color={colors.scaffld}
+                />
+                <Text style={styles.biometricText}>Sign in with {biometricLabel}</Text>
+              </TouchableOpacity>
+            )}
 
             <TouchableOpacity
               onPress={() => navigation.navigate('ForgotPassword')}
@@ -159,6 +229,22 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontFamily: fonts.primary.semiBold,
     fontSize: 16,
+  },
+  biometricButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.sm,
+    minHeight: 48,
+    marginTop: spacing.md,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.slate,
+  },
+  biometricText: {
+    color: colors.scaffld,
+    fontFamily: fonts.primary.medium,
+    fontSize: 15,
   },
   linkButton: { alignItems: 'center', marginTop: spacing.md, padding: spacing.sm },
   linkText: { color: colors.scaffld, fontFamily: fonts.primary.medium, fontSize: 14 },

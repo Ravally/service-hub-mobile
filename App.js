@@ -32,6 +32,8 @@ import { startNotificationTriggers } from './src/services/notificationTriggers';
 import { registerTodayGeofences, stopGeofencing } from './src/services/geofenceService';
 import { registerQuickActions, handleQuickAction, getInitialQuickAction } from './src/services/quickActionsService';
 import * as QuickActions from 'expo-quick-actions';
+import { StripeTerminalProvider } from '@stripe/stripe-terminal-react-native';
+import { fetchConnectionToken } from './src/services/terminalService';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -124,13 +126,15 @@ export default function App() {
   if (!fontsLoaded) return null;
 
   return (
-    <SafeAreaProvider>
-      <View style={styles.container} onLayout={onLayoutRootView}>
-        <StatusBar style="light" />
-        <RootNavigator />
-        <ToastContainer />
-      </View>
-    </SafeAreaProvider>
+    <StripeTerminalProvider logLevel="none" tokenProvider={fetchConnectionToken}>
+      <SafeAreaProvider>
+        <View style={styles.container} onLayout={onLayoutRootView}>
+          <StatusBar style="light" />
+          <RootNavigator />
+          <ToastContainer />
+        </View>
+      </SafeAreaProvider>
+    </StripeTerminalProvider>
   );
 }
 

@@ -11,13 +11,6 @@ export const colors = {
   scaffldGlow: 'rgba(14, 165, 160, 0.2)',
   scaffldSubtle: 'rgba(14, 165, 160, 0.08)',
 
-  // Legacy aliases (existing code references these — migrate gradually)
-  trellio: '#0EA5A0',
-  trellioDeep: '#087F7A',
-  trellioLight: '#B2F0ED',
-  trellioGlow: 'rgba(14, 165, 160, 0.2)',
-  trellioSubtle: 'rgba(14, 165, 160, 0.08)',
-
   // Clamp (AI assistant)
   clamp: '#F59E0B',
   clampDeep: '#D97706',

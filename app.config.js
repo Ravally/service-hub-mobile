@@ -6,22 +6,29 @@ export default {
     orientation: 'portrait',
     icon: './assets/icon.png',
     userInterfaceStyle: 'dark',
-    newArchEnabled: true,
+    // Disabled: Stripe Terminal SDK does not yet support New Architecture (github.com/stripe/stripe-terminal-react-native/issues/848)
+    newArchEnabled: false,
     splash: {
       image: './assets/splash-icon.png',
       resizeMode: 'contain',
       backgroundColor: '#0C1220',
     },
+    scheme: 'scaffld',
     ios: {
       supportsTablet: false,
       bundleIdentifier: 'app.scaffld.mobile',
+      buildNumber: '1',
       infoPlist: {
         NSLocationWhenInUseUsageDescription:
-          'Scaffld uses your location to track clock-in/out for jobs.',
+          'Scaffld uses your location to plan routes and track job check-ins.',
         NSLocationAlwaysAndWhenInUseUsageDescription:
-          'Scaffld tracks your location during active jobs for GPS logging.',
+          'Scaffld uses background location for geofencing alerts when you arrive at or leave job sites.',
         NSCameraUsageDescription:
-          'Scaffld uses the camera for job photos and form submissions.',
+          'Scaffld uses your camera to take photos of job sites and completed work.',
+        NSPhotoLibraryUsageDescription:
+          'Scaffld accesses your photos to attach images to jobs and quotes.',
+        NSContactsUsageDescription:
+          'Scaffld accesses your contacts to quickly import client information.',
       },
     },
     android: {
@@ -30,6 +37,7 @@ export default {
         backgroundColor: '#0C1220',
       },
       package: 'app.scaffld.mobile',
+      versionCode: 1,
       config: {
         googleMaps: {
           apiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_KEY,
@@ -40,14 +48,32 @@ export default {
         'ACCESS_COARSE_LOCATION',
         'ACCESS_BACKGROUND_LOCATION',
         'CAMERA',
+        'READ_CONTACTS',
         'RECEIVE_BOOT_COMPLETED',
         'VIBRATE',
+        'NFC',
       ],
     },
     web: {
       favicon: './assets/favicon.png',
     },
     plugins: [
+      [
+        'expo-build-properties',
+        {
+          ios: {
+            deploymentTarget: '16.0',
+          },
+        },
+      ],
+      [
+        '@stripe/stripe-terminal-react-native',
+        {
+          bluetoothBackgroundMode: true,
+          locationWhenInUsePermission:
+            'Location access is required to accept in-person payments.',
+        },
+      ],
       'expo-font',
       [
         'expo-location',
@@ -55,7 +81,7 @@ export default {
           locationAlwaysAndWhenInUsePermission:
             'Scaffld uses your location in the background to auto-start timers when you arrive at job sites.',
           locationWhenInUsePermission:
-            'Scaffld uses your location to track clock-in/out for jobs.',
+            'Scaffld uses your location to plan routes and track job check-ins.',
           isIosBackgroundLocationEnabled: true,
           isAndroidBackgroundLocationEnabled: true,
         },
@@ -63,8 +89,8 @@ export default {
       [
         'expo-image-picker',
         {
-          photosPermission: 'Scaffld uses your photos for job documentation.',
-          cameraPermission: 'Scaffld uses the camera for job photos and form submissions.',
+          photosPermission: 'Scaffld accesses your photos to attach images to jobs and quotes.',
+          cameraPermission: 'Scaffld uses your camera to take photos of job sites and completed work.',
         },
       ],
       [
@@ -74,10 +100,20 @@ export default {
           sounds: [],
         },
       ],
+      [
+        'expo-contacts',
+        {
+          contactsPermission: 'Scaffld accesses your contacts to quickly import client information.',
+        },
+      ],
+      'expo-secure-store',
       '@react-native-community/datetimepicker',
       'expo-quick-actions',
     ],
     extra: {
+      eas: {
+        projectId: process.env.EXPO_PUBLIC_EAS_PROJECT_ID,
+      },
       firebaseApiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
       firebaseAuthDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
       firebaseProjectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,

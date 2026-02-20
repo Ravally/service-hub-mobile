@@ -15,6 +15,8 @@ import { colors, typeScale, fonts, spacing, shadows } from '../../theme';
 import StatusPill from '../../components/common/StatusPill';
 import EmptyState from '../../components/ui/EmptyState';
 import { formatCurrency } from '../../utils/formatters';
+import JobMapView from '../../components/maps/JobMapView';
+import { openInMaps } from '../../utils/mapUtils';
 
 const STAFF_COLORS = ['#0EA5A0', '#60A5FA', '#F7845E', '#FFAA5C', '#C084FC', '#34D399', '#FB7185'];
 const VIEWS = [
@@ -261,7 +263,11 @@ export default function ScheduleScreen({ navigation }) {
       {viewMode === 'map' && (
         <View style={styles.mapContainer}>
           {mappableJobs.length > 0 ? (
-            <MapPlaceholder count={mappableJobs.length} onJobPress={(job) => navigation.navigate('JobDetail', { jobId: job.id })} />
+            <JobMapView
+              jobs={mappableJobs}
+              onJobPress={(job) => navigation.navigate('JobDetail', { jobId: job.id })}
+              onNavigatePress={(job) => openInMaps(job.lat, job.lng, job.title || 'Job')}
+            />
           ) : (
             <View style={styles.noMapData}>
               <Ionicons name="location-outline" size={48} color={colors.muted} />
@@ -282,16 +288,6 @@ export default function ScheduleScreen({ navigation }) {
         </TouchableOpacity>
       )}
     </SafeAreaView>
-  );
-}
-
-function MapPlaceholder({ count }) {
-  return (
-    <View style={styles.mapPlaceholder}>
-      <Ionicons name="map" size={48} color={colors.scaffld} />
-      <Text style={styles.mapPlaceholderText}>{count} jobs on the map</Text>
-      <Text style={styles.mapPlaceholderSub}>Full map view available on device</Text>
-    </View>
   );
 }
 
@@ -402,9 +398,6 @@ const styles = StyleSheet.create({
   mapContainer: { flex: 1 },
   noMapData: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   noMapText: { fontFamily: fonts.primary.regular, fontSize: 14, color: colors.muted, marginTop: spacing.sm },
-  mapPlaceholder: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  mapPlaceholderText: { fontFamily: fonts.primary.semiBold, fontSize: 16, color: colors.white, marginTop: spacing.md },
-  mapPlaceholderSub: { fontFamily: fonts.primary.regular, fontSize: 13, color: colors.muted, marginTop: 4 },
   todayFab: {
     position: 'absolute',
     bottom: spacing.lg,

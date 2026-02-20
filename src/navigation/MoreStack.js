@@ -7,12 +7,14 @@ import MessageListScreen from '../screens/messages/MessageListScreen';
 import ConversationScreen from '../screens/messages/ConversationScreen';
 import ClockInOutScreen from '../screens/time/ClockInOutScreen';
 import ExpenseCreateScreen from '../screens/expenses/ExpenseCreateScreen';
+import ClampChatScreen from '../screens/clamp/ClampChatScreen';
 
 const SafeSettings = withErrorBoundary(SettingsScreen);
 const SafeMessageList = withErrorBoundary(MessageListScreen);
 const SafeConversation = withErrorBoundary(ConversationScreen);
 const SafeClockInOut = withErrorBoundary(ClockInOutScreen);
 const SafeExpenseCreate = withErrorBoundary(ExpenseCreateScreen);
+const SafeClampChat = withErrorBoundary(ClampChatScreen);
 
 const Stack = createNativeStackNavigator();
 
@@ -50,6 +52,11 @@ export default function MoreStack() {
         name="ExpenseCreate"
         component={SafeExpenseCreate}
         options={{ title: 'New Expense' }}
+      />
+      <Stack.Screen
+        name="ClampChat"
+        component={SafeClampChat}
+        options={{ title: 'Clamp' }}
       />
     </Stack.Navigator>
   );

@@ -1,6 +1,7 @@
 import React, { useRef, useCallback } from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, fonts, shadows } from '../theme';
 import { mediumImpact } from '../utils/haptics';
@@ -9,6 +10,7 @@ import ScheduleStack from './ScheduleStack';
 import SearchStack from './SearchStack';
 import MoreStack from './MoreStack';
 import QuickCreateSheet from '../components/common/QuickCreateSheet';
+import ClampIcon from '../components/clamp/ClampIcon';
 
 const Tab = createBottomTabNavigator();
 
@@ -85,7 +87,23 @@ export default function MainTabs() {
         <Tab.Screen name="More" component={MoreStack} />
       </Tab.Navigator>
       <QuickCreateSheet ref={sheetRef} />
+      <ClampFAB />
     </View>
+  );
+}
+
+function ClampFAB() {
+  const navigation = useNavigation();
+
+  const handlePress = useCallback(() => {
+    mediumImpact();
+    navigation.navigate('More', { screen: 'ClampChat' });
+  }, [navigation]);
+
+  return (
+    <TouchableOpacity style={styles.clampFab} onPress={handlePress} activeOpacity={0.85}>
+      <ClampIcon size={22} color={colors.white} />
+    </TouchableOpacity>
   );
 }
 
@@ -103,5 +121,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     ...shadows.glowTeal,
+  },
+  clampFab: {
+    position: 'absolute',
+    bottom: 80,
+    right: 16,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: colors.clamp,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#F59E0B',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
   },
 });

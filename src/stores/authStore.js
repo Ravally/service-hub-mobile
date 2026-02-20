@@ -3,6 +3,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../services/firebase';
 import * as authService from '../services/auth';
+import { clearCredentials } from '../services/biometricService';
 
 export const useAuthStore = create((set) => ({
   user: null,
@@ -67,6 +68,7 @@ export const useAuthStore = create((set) => ({
 
   signOut: async () => {
     try {
+      await clearCredentials();
       await authService.signOut();
     } catch (err) {
       set({ error: err.message });

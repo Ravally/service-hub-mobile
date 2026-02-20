@@ -14,6 +14,7 @@ import { mediumImpact, lightImpact } from '../../utils/haptics';
 import StatusPill from '../../components/common/StatusPill';
 import Card from '../../components/ui/Card';
 import ActionSheet from '../../components/common/ActionSheet';
+import { shareQuotePDF } from '../../services/pdfService';
 
 const STATUS_ACTIONS = {
   Draft: [{ label: 'Send to Client', next: 'Sent', icon: 'send-outline', variant: 'primary' }],
@@ -68,6 +69,16 @@ export default function QuoteDetailScreen({ route, navigation }) {
 
   const moreActions = useMemo(() => {
     const items = [];
+    items.push({
+      key: 'pdf', icon: 'document-outline', label: 'Share PDF',
+      onPress: async () => {
+        try {
+          await shareQuotePDF(quote, client, null, totals);
+        } catch {
+          showToast('Failed to generate PDF', 'error');
+        }
+      },
+    });
     items.push({
       key: 'duplicate', icon: 'copy-outline', label: 'Duplicate Quote',
       onPress: async () => {
