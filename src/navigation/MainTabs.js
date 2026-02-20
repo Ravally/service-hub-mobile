@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useState, useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
@@ -93,10 +93,28 @@ export default function MainTabs() {
 }
 
 function ClampFAB() {
+  const [hidden, setHidden] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = navigationRef.current?.addListener('state', () => {
+      const state = navigationRef.current?.getRootState();
+      // Traverse: Main > More tab > ClampChat screen
+      const mainRoute = state?.routes?.find((r) => r.name === 'Main');
+      const tabState = mainRoute?.state;
+      const moreTab = tabState?.routes?.find((r) => r.name === 'More');
+      const moreState = moreTab?.state;
+      const currentScreen = moreState?.routes?.[moreState.index]?.name;
+      setHidden(currentScreen === 'ClampChat');
+    });
+    return () => unsubscribe?.();
+  }, []);
+
   const handlePress = useCallback(() => {
     mediumImpact();
     navigationRef.current?.navigate('More', { screen: 'ClampChat' });
   }, []);
+
+  if (hidden) return null;
 
   return (
     <TouchableOpacity style={styles.clampFab} onPress={handlePress} activeOpacity={0.85}>
