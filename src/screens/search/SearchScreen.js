@@ -282,7 +282,7 @@ export default function SearchScreen() {
       </View>
 
       {/* Type filter chips */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chipRow}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipScroll} contentContainerStyle={styles.chipRow}>
         {TYPE_TABS.map((tab) => (
           <FilterChip
             key={tab.key}
@@ -295,7 +295,7 @@ export default function SearchScreen() {
 
       {/* Status sub-filters */}
       {statusOptions.length > 0 && (
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.subChipRow}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipScroll} contentContainerStyle={styles.subChipRow}>
           {statusOptions.map((status) => (
             <FilterChip
               key={status}
@@ -370,16 +370,20 @@ const styles = StyleSheet.create({
     color: colors.white,
     paddingVertical: 0,
   },
+  chipScroll: { flexGrow: 0 },
   chipRow: {
     paddingHorizontal: spacing.md,
     paddingTop: spacing.sm,
     paddingBottom: 4,
     gap: spacing.xs,
+    alignItems: 'center',
   },
   subChipRow: {
     paddingHorizontal: spacing.md,
+    paddingTop: 4,
     paddingBottom: spacing.sm,
     gap: spacing.xs,
+    alignItems: 'center',
   },
   chip: {
     paddingHorizontal: 14,
