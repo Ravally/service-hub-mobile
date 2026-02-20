@@ -32,8 +32,15 @@ import { startNotificationTriggers } from './src/services/notificationTriggers';
 import { registerTodayGeofences, stopGeofencing } from './src/services/geofenceService';
 import { registerQuickActions, handleQuickAction, getInitialQuickAction } from './src/services/quickActionsService';
 import * as QuickActions from 'expo-quick-actions';
-import { StripeTerminalProvider } from '@stripe/stripe-terminal-react-native';
 import { fetchConnectionToken } from './src/services/terminalService';
+
+// Stripe Terminal requires a custom dev build — gracefully skip in Expo Go
+let StripeTerminalProvider = null;
+try {
+  StripeTerminalProvider = require('@stripe/stripe-terminal-react-native').StripeTerminalProvider;
+} catch {
+  // Native module not available (Expo Go)
+}
 
 SplashScreen.preventAutoHideAsync();
 
@@ -125,17 +132,25 @@ export default function App() {
 
   if (!fontsLoaded) return null;
 
-  return (
-    <StripeTerminalProvider logLevel="none" tokenProvider={fetchConnectionToken}>
-      <SafeAreaProvider>
-        <View style={styles.container} onLayout={onLayoutRootView}>
-          <StatusBar style="light" />
-          <RootNavigator />
-          <ToastContainer />
-        </View>
-      </SafeAreaProvider>
-    </StripeTerminalProvider>
+  const content = (
+    <SafeAreaProvider>
+      <View style={styles.container} onLayout={onLayoutRootView}>
+        <StatusBar style="light" />
+        <RootNavigator />
+        <ToastContainer />
+      </View>
+    </SafeAreaProvider>
   );
+
+  if (StripeTerminalProvider) {
+    return (
+      <StripeTerminalProvider logLevel="none" tokenProvider={fetchConnectionToken}>
+        {content}
+      </StripeTerminalProvider>
+    );
+  }
+
+  return content;
 }
 
 const styles = StyleSheet.create({

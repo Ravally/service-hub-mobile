@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
-import { useStripeTerminal } from '@stripe/stripe-terminal-react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { createTerminalPaymentIntent } from '../../services/terminalService';
 import { useInvoicesStore } from '../../stores/invoicesStore';
@@ -10,6 +9,14 @@ import { formatCurrency } from '../../utils';
 import { colors, typeScale, fonts, spacing } from '../../theme';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
+
+// Stripe Terminal requires a custom dev build — gracefully degrade in Expo Go
+let useStripeTerminal = null;
+try {
+  useStripeTerminal = require('@stripe/stripe-terminal-react-native').useStripeTerminal;
+} catch {
+  // Native module not available (Expo Go)
+}
 
 const STEPS = {
   idle: 'idle',
@@ -34,6 +41,29 @@ const STEP_LABELS = {
 };
 
 export default function TapToPaySection({ userId, invoiceId, amountDueCents, onPaymentComplete }) {
+  // If Stripe Terminal native module is not available, show fallback
+  if (!useStripeTerminal) {
+    return (
+      <>
+        <Text style={styles.sectionLabel}>TAP TO PAY</Text>
+        <Card style={[styles.section, { opacity: 0.5 }]}>
+          <View style={styles.infoRow}>
+            <Ionicons name="phone-portrait-outline" size={24} color={colors.muted} />
+            <View style={styles.infoText}>
+              <Text style={styles.infoTitle}>Contactless Payment</Text>
+              <Text style={styles.infoDesc}>Tap to Pay requires a custom dev build. Not available in Expo Go.</Text>
+            </View>
+          </View>
+          <Button title="Requires Dev Build" variant="ghost" disabled />
+        </Card>
+      </>
+    );
+  }
+
+  return <TapToPayInner userId={userId} invoiceId={invoiceId} amountDueCents={amountDueCents} onPaymentComplete={onPaymentComplete} />;
+}
+
+function TapToPayInner({ userId, invoiceId, amountDueCents, onPaymentComplete }) {
   const showToast = useUiStore((s) => s.showToast);
   const {
     initialize,
