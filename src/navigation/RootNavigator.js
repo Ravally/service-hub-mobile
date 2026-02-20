@@ -8,7 +8,8 @@ import { colors } from '../theme';
 import AuthStack from './AuthStack';
 import MainTabs from './MainTabs';
 
-export const navigationRef = React.createRef();
+// Re-export from dedicated module to avoid circular imports
+export { navigationRef } from './navigationRef';
 const Stack = createNativeStackNavigator();
 
 const prefix = Linking.createURL('/');

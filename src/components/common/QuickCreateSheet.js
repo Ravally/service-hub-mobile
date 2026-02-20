@@ -6,7 +6,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { colors, fonts, spacing, shadows } from '../../theme';
 import { mediumImpact, lightImpact } from '../../utils/haptics';
-import { navigationRef } from '../../navigation/RootNavigator';
+import { navigationRef } from '../../navigation/navigationRef';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const SHEET_HEIGHT = 320;

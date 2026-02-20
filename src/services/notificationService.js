@@ -26,6 +26,11 @@ export async function registerForPushNotifications(userId) {
       return null;
     }
 
+    // Remote push notifications are unavailable in Expo Go (removed in SDK 53)
+    if (Constants.appOwnership === 'expo') {
+      return null;
+    }
+
     const { status: existing } = await Notifications.getPermissionsAsync();
     let finalStatus = existing;
 
