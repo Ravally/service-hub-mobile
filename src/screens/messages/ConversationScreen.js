@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
   View, Text, FlatList, TextInput, TouchableOpacity,
   KeyboardAvoidingView, Platform, StyleSheet,
@@ -15,9 +15,21 @@ import { formatDate } from '../../utils';
 
 export default function ConversationScreen({ route, navigation }) {
   const { clientId } = route.params || {};
-  const client = useClientsStore((s) => s.getClientById(clientId));
-  const threadMessages = useMessagesStore((s) => s.getMessagesForClient(clientId));
+  const clients = useClientsStore((s) => s.clients);
+  const messages = useMessagesStore((s) => s.messages);
   const userId = useAuthStore((s) => s.userId);
+
+  const client = useMemo(() => clients.find((c) => c.id === clientId) || null, [clients, clientId]);
+  const threadMessages = useMemo(() =>
+    messages
+      .filter((m) => m.clientId === clientId)
+      .sort((a, b) => {
+        const dateA = a.sentAt ? new Date(a.sentAt) : new Date(0);
+        const dateB = b.sentAt ? new Date(b.sentAt) : new Date(0);
+        return dateA - dateB;
+      }),
+    [messages, clientId],
+  );
   const showToast = useUiStore((s) => s.showToast);
   const listRef = useRef(null);
 
